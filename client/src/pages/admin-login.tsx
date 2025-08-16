@@ -81,7 +81,7 @@ export default function AdminLogin() {
             </div>
             <Button
               type="submit"
-              className="w-full bg-temer-blue hover:bg-blue-700 text-white"
+              className="w-full hover:bg-blue-700 text-white bg-[#1dd82d]"
               disabled={isLoading}
               data-testid="button-login"
             >
