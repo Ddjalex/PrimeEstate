@@ -37,6 +37,30 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Initialize database
+  const { connectDB } = await import("./db");
+  const { UserModel } = await import("@shared/schema");
+  const bcrypt = await import("bcrypt");
+  
+  await connectDB();
+  
+  // Create default admin user if it doesn't exist
+  try {
+    const existingAdmin = await UserModel.findOne({ username: 'admin' });
+    if (!existingAdmin) {
+      const hashedPassword = await bcrypt.hash('admin123', 10);
+      const adminUser = new UserModel({
+        username: 'admin',
+        password: hashedPassword,
+        isAdmin: true
+      });
+      await adminUser.save();
+      console.log('Default admin user created (admin/admin123)');
+    }
+  } catch (error) {
+    console.error('Error creating default admin user:', error);
+  }
+
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {

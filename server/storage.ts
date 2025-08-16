@@ -1,7 +1,7 @@
 import { 
-  users, 
-  properties, 
-  propertyImages, 
+  UserModel, 
+  PropertyModel, 
+  PropertyImageModel,
   type User, 
   type InsertUser, 
   type Property, 
@@ -9,8 +9,6 @@ import {
   type PropertyImage,
   type InsertPropertyImage
 } from "@shared/schema";
-import { db } from "./db";
-import { eq, desc, and, sql } from "drizzle-orm";
 
 export interface IStorage {
   // User operations
@@ -35,104 +33,148 @@ export interface IStorage {
 export class DatabaseStorage implements IStorage {
   // User operations
   async getUser(id: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.id, id));
-    return user || undefined;
+    try {
+      const user = await UserModel.findById(id);
+      return user || undefined;
+    } catch (error) {
+      console.error('Error fetching user:', error);
+      return undefined;
+    }
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.username, username));
-    return user || undefined;
+    try {
+      const user = await UserModel.findOne({ username });
+      return user || undefined;
+    } catch (error) {
+      console.error('Error fetching user by username:', error);
+      return undefined;
+    }
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const [user] = await db
-      .insert(users)
-      .values(insertUser)
-      .returning();
-    return user;
+    try {
+      const user = new UserModel(insertUser);
+      await user.save();
+      return user;
+    } catch (error) {
+      console.error('Error creating user:', error);
+      throw error;
+    }
   }
 
   // Property operations
   async getAllProperties(): Promise<Property[]> {
-    return await db
-      .select()
-      .from(properties)
-      .where(eq(properties.isActive, true))
-      .orderBy(desc(properties.createdAt));
+    try {
+      return await PropertyModel.find({ isActive: true })
+        .sort({ createdAt: -1 });
+    } catch (error) {
+      console.error('Error fetching properties:', error);
+      return [];
+    }
   }
 
   async getProperty(id: string): Promise<Property | undefined> {
-    const [property] = await db.select().from(properties).where(eq(properties.id, id));
-    return property || undefined;
+    try {
+      const property = await PropertyModel.findById(id);
+      return property || undefined;
+    } catch (error) {
+      console.error('Error fetching property:', error);
+      return undefined;
+    }
   }
 
   async createProperty(property: InsertProperty): Promise<Property> {
-    const [newProperty] = await db
-      .insert(properties)
-      .values({
-        ...property,
-        updatedAt: new Date()
-      })
-      .returning();
-    return newProperty;
+    try {
+      const newProperty = new PropertyModel(property);
+      await newProperty.save();
+      return newProperty;
+    } catch (error) {
+      console.error('Error creating property:', error);
+      throw error;
+    }
   }
 
   async updateProperty(id: string, property: Partial<InsertProperty>): Promise<Property | undefined> {
-    const [updatedProperty] = await db
-      .update(properties)
-      .set({
-        ...property,
-        updatedAt: new Date()
-      })
-      .where(eq(properties.id, id))
-      .returning();
-    return updatedProperty || undefined;
+    try {
+      const updatedProperty = await PropertyModel.findByIdAndUpdate(
+        id,
+        { ...property, updatedAt: new Date() },
+        { new: true }
+      );
+      return updatedProperty || undefined;
+    } catch (error) {
+      console.error('Error updating property:', error);
+      return undefined;
+    }
   }
 
   async deleteProperty(id: string): Promise<boolean> {
-    const result = await db
-      .update(properties)
-      .set({ isActive: false })
-      .where(eq(properties.id, id));
-    return (result.rowCount ?? 0) > 0;
+    try {
+      const result = await PropertyModel.findByIdAndUpdate(
+        id,
+        { isActive: false },
+        { new: true }
+      );
+      return !!result;
+    } catch (error) {
+      console.error('Error deleting property:', error);
+      return false;
+    }
   }
 
   // Property image operations
   async getPropertyImages(propertyId: string): Promise<PropertyImage[]> {
-    return await db
-      .select()
-      .from(propertyImages)
-      .where(eq(propertyImages.propertyId, propertyId))
-      .orderBy(desc(propertyImages.isMain), propertyImages.sortOrder);
+    try {
+      return await PropertyImageModel.find({ propertyId })
+        .sort({ isMain: -1, sortOrder: 1 });
+    } catch (error) {
+      console.error('Error fetching property images:', error);
+      return [];
+    }
   }
 
   async createPropertyImage(image: InsertPropertyImage): Promise<PropertyImage> {
-    const [newImage] = await db
-      .insert(propertyImages)
-      .values(image)
-      .returning();
-    return newImage;
+    try {
+      const newImage = new PropertyImageModel(image);
+      await newImage.save();
+      return newImage;
+    } catch (error) {
+      console.error('Error creating property image:', error);
+      throw error;
+    }
   }
 
   async deletePropertyImage(id: string): Promise<boolean> {
-    const result = await db.delete(propertyImages).where(eq(propertyImages.id, id));
-    return (result.rowCount ?? 0) > 0;
+    try {
+      const result = await PropertyImageModel.findByIdAndDelete(id);
+      return !!result;
+    } catch (error) {
+      console.error('Error deleting property image:', error);
+      return false;
+    }
   }
 
   async setMainImage(propertyId: string, imageId: string): Promise<boolean> {
-    // First, unset all main images for this property
-    await db
-      .update(propertyImages)
-      .set({ isMain: false })
-      .where(eq(propertyImages.propertyId, propertyId));
-    
-    // Then set the specified image as main
-    const result = await db
-      .update(propertyImages)
-      .set({ isMain: true })
-      .where(and(eq(propertyImages.id, imageId), eq(propertyImages.propertyId, propertyId)));
-    
-    return (result.rowCount ?? 0) > 0;
+    try {
+      // First, unset all main images for this property
+      await PropertyImageModel.updateMany(
+        { propertyId },
+        { isMain: false }
+      );
+      
+      // Then set the specified image as main
+      const result = await PropertyImageModel.findOneAndUpdate(
+        { _id: imageId, propertyId },
+        { isMain: true },
+        { new: true }
+      );
+      
+      return !!result;
+    } catch (error) {
+      console.error('Error setting main image:', error);
+      return false;
+    }
   }
 }
 
