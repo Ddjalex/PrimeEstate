@@ -233,7 +233,7 @@ export default function AdminDashboard() {
               <Button
                 onClick={() => setLocation("/")}
                 variant="outline"
-                className="border-green-200 text-green-700 hover:bg-green-50"
+                className="border-temer-green/30 text-temer-green hover:bg-temer-green/10"
                 data-testid="button-view-website"
               >
                 <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -268,7 +268,7 @@ export default function AdminDashboard() {
             </div>
             <Button
               onClick={() => setShowPropertyForm(true)}
-              className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-3"
+              className="bg-gradient-to-r from-temer-green to-temer-dark-green hover:from-temer-dark-green hover:to-temer-green text-white shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-3"
               data-testid="button-add-property"
             >
               <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -566,7 +566,7 @@ export default function AdminDashboard() {
 
                 {/* Property Content */}
                 <CardContent className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-green-600 transition-colors duration-200">
+                  <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-temer-green transition-colors duration-200">
                     {property.title}
                   </h3>
                   
@@ -604,7 +604,7 @@ export default function AdminDashboard() {
 
                   {/* Location */}
                   <div className="flex items-center text-gray-600 mb-4">
-                    <svg className="w-4 h-4 mr-2 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="w-4 h-4 mr-2 text-temer-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
@@ -617,7 +617,7 @@ export default function AdminDashboard() {
                       variant="outline"
                       size="sm"
                       onClick={() => handleEdit(property)}
-                      className="border-green-200 text-green-700 hover:bg-green-50 hover:border-green-300 transition-colors duration-200"
+                      className="border-temer-green/30 text-temer-green hover:bg-temer-green/10 hover:border-temer-green transition-colors duration-200"
                       data-testid={`button-edit-${property.id}`}
                     >
                       <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">

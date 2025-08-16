@@ -70,7 +70,7 @@ export default function Home() {
           <div className="flex justify-between items-center py-4">
             {/* Logo */}
             <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-temer-blue rounded-lg flex items-center justify-center">
+              <div className="w-12 h-12 bg-temer-green rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-xl">T</span>
               </div>
               <div>
@@ -83,49 +83,49 @@ export default function Home() {
             <div className="hidden lg:flex items-center space-x-8">
               <button 
                 onClick={() => scrollToSection('home')}
-                className="text-gray-700 hover:text-temer-blue transition-colors font-medium"
+                className="text-gray-700 hover:text-temer-green transition-colors font-medium"
                 data-testid="nav-home"
               >
                 Home
               </button>
               <button 
                 onClick={() => scrollToSection('projects')}
-                className="text-gray-700 hover:text-temer-blue transition-colors font-medium"
+                className="text-gray-700 hover:text-temer-green transition-colors font-medium"
                 data-testid="nav-projects"
               >
                 Projects
               </button>
               <button 
                 onClick={() => scrollToSection('properties')}
-                className="text-gray-700 hover:text-temer-blue transition-colors font-medium"
+                className="text-gray-700 hover:text-temer-green transition-colors font-medium"
                 data-testid="nav-properties"
               >
                 Properties
               </button>
               <button 
                 onClick={() => scrollToSection('construction')}
-                className="text-gray-700 hover:text-temer-blue transition-colors font-medium"
+                className="text-gray-700 hover:text-temer-green transition-colors font-medium"
                 data-testid="nav-construction"
               >
                 Construction Updates
               </button>
               <button 
                 onClick={() => scrollToSection('blog')}
-                className="text-gray-700 hover:text-temer-blue transition-colors font-medium"
+                className="text-gray-700 hover:text-temer-green transition-colors font-medium"
                 data-testid="nav-blog"
               >
                 Blog
               </button>
               <button 
                 onClick={() => scrollToSection('about')}
-                className="text-gray-700 hover:text-temer-blue transition-colors font-medium"
+                className="text-gray-700 hover:text-temer-green transition-colors font-medium"
                 data-testid="nav-about"
               >
                 About Us
               </button>
               <button 
                 onClick={() => scrollToSection('contact')}
-                className="text-gray-700 hover:text-temer-blue transition-colors font-medium"
+                className="text-gray-700 hover:text-temer-green transition-colors font-medium"
                 data-testid="nav-contact"
               >
                 Contact Us
@@ -135,7 +135,7 @@ export default function Home() {
             {/* Contact Info & Mobile Menu */}
             <div className="flex items-center space-x-4">
               <div className="hidden md:block text-right">
-                <p className="text-sm font-semibold text-temer-blue">Hotline - 6033</p>
+                <p className="text-sm font-semibold text-temer-green">Hotline - 6033</p>
                 <p className="text-xs text-temer-gray">+251975666699</p>
               </div>
               
@@ -156,13 +156,13 @@ export default function Home() {
           {isMobileMenuOpen && (
             <div className="lg:hidden border-t border-gray-200 py-4 bg-white">
               <div className="flex flex-col space-y-2">
-                <button onClick={() => scrollToSection('home')} className="text-left py-2 px-2 text-gray-700 hover:text-temer-blue hover:bg-gray-50 rounded">Home</button>
-                <button onClick={() => scrollToSection('projects')} className="text-left py-2 px-2 text-gray-700 hover:text-temer-blue hover:bg-gray-50 rounded">Projects</button>
-                <button onClick={() => scrollToSection('properties')} className="text-left py-2 px-2 text-gray-700 hover:text-temer-blue hover:bg-gray-50 rounded">Properties</button>
-                <button onClick={() => scrollToSection('construction')} className="text-left py-2 px-2 text-gray-700 hover:text-temer-blue hover:bg-gray-50 rounded">Construction Updates</button>
-                <button onClick={() => scrollToSection('blog')} className="text-left py-2 px-2 text-gray-700 hover:text-temer-blue hover:bg-gray-50 rounded">Blog</button>
-                <button onClick={() => scrollToSection('about')} className="text-left py-2 px-2 text-gray-700 hover:text-temer-blue hover:bg-gray-50 rounded">About Us</button>
-                <button onClick={() => scrollToSection('contact')} className="text-left py-2 px-2 text-gray-700 hover:text-temer-blue hover:bg-gray-50 rounded">Contact Us</button>
+                <button onClick={() => scrollToSection('home')} className="text-left py-2 px-2 text-gray-700 hover:text-temer-green hover:bg-gray-50 rounded">Home</button>
+                <button onClick={() => scrollToSection('projects')} className="text-left py-2 px-2 text-gray-700 hover:text-temer-green hover:bg-gray-50 rounded">Projects</button>
+                <button onClick={() => scrollToSection('properties')} className="text-left py-2 px-2 text-gray-700 hover:text-temer-green hover:bg-gray-50 rounded">Properties</button>
+                <button onClick={() => scrollToSection('construction')} className="text-left py-2 px-2 text-gray-700 hover:text-temer-green hover:bg-gray-50 rounded">Construction Updates</button>
+                <button onClick={() => scrollToSection('blog')} className="text-left py-2 px-2 text-gray-700 hover:text-temer-green hover:bg-gray-50 rounded">Blog</button>
+                <button onClick={() => scrollToSection('about')} className="text-left py-2 px-2 text-gray-700 hover:text-temer-green hover:bg-gray-50 rounded">About Us</button>
+                <button onClick={() => scrollToSection('contact')} className="text-left py-2 px-2 text-gray-700 hover:text-temer-green hover:bg-gray-50 rounded">Contact Us</button>
               </div>
             </div>
           )}
@@ -180,7 +180,7 @@ export default function Home() {
         
         <div className="relative z-10 text-center text-white px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
           <div className="mb-4">
-            <Badge className="bg-temer-blue text-white text-sm px-4 py-2 mb-4">MAKE YOUR NEXT MOVE WITH US</Badge>
+            <Badge className="bg-temer-green text-white text-sm px-4 py-2 mb-4">MAKE YOUR NEXT MOVE WITH US</Badge>
           </div>
           <h1 className="sm:text-5xl lg:text-7xl animate-fade-in text-[#28bd5c] bg-[#7f726a] font-extrabold text-[40px] text-left ml-[4px] mr-[4px] mt-[14px] mb-[14px] pl-[4px] pr-[4px] pt-[-6px] pb-[-6px]">
             TEMER PROPERTIES
@@ -201,7 +201,7 @@ export default function Home() {
             <Button 
               size="lg"
               variant="outline"
-              className="border-white text-white hover:bg-white hover:text-temer-blue font-semibold py-4 px-8 text-lg"
+              className="border-white text-white hover:bg-white hover:text-temer-green font-semibold py-4 px-8 text-lg"
               onClick={() => scrollToSection('projects')}
               data-testid="hero-buyers-button"
             >
@@ -212,22 +212,22 @@ export default function Home() {
           
           {/* Social Media Links */}
           <div className="mt-8 flex justify-center space-x-6">
-            <a href="https://web.facebook.com/temerproperties" className="text-white hover:text-temer-light-blue transition-colors" data-testid="social-facebook">
+            <a href="https://web.facebook.com/temerproperties" className="text-white hover:text-temer-light-green transition-colors" data-testid="social-facebook">
               <i className="fab fa-facebook text-2xl"></i>
             </a>
-            <a href="http://www.youtube.com/@TemerProperties" className="text-white hover:text-temer-light-blue transition-colors" data-testid="social-youtube">
+            <a href="http://www.youtube.com/@TemerProperties" className="text-white hover:text-temer-light-green transition-colors" data-testid="social-youtube">
               <i className="fab fa-youtube text-2xl"></i>
             </a>
-            <a href="https://www.instagram.com/temerproperties" className="text-white hover:text-temer-light-blue transition-colors" data-testid="social-instagram">
+            <a href="https://www.instagram.com/temerproperties" className="text-white hover:text-temer-light-green transition-colors" data-testid="social-instagram">
               <i className="fab fa-instagram text-2xl"></i>
             </a>
-            <a href="https://x.com/TemerProperties" className="text-white hover:text-temer-light-blue transition-colors" data-testid="social-twitter">
+            <a href="https://x.com/TemerProperties" className="text-white hover:text-temer-light-green transition-colors" data-testid="social-twitter">
               <i className="fab fa-twitter text-2xl"></i>
             </a>
-            <a href="https://www.linkedin.com/company/temer-realestate/" className="text-white hover:text-temer-light-blue transition-colors" data-testid="social-linkedin">
+            <a href="https://www.linkedin.com/company/temer-realestate/" className="text-white hover:text-temer-light-green transition-colors" data-testid="social-linkedin">
               <i className="fab fa-linkedin text-2xl"></i>
             </a>
-            <a href="https://t.me/temer_properties" className="text-white hover:text-temer-light-blue transition-colors" data-testid="social-telegram">
+            <a href="https://t.me/temer_properties" className="text-white hover:text-temer-light-green transition-colors" data-testid="social-telegram">
               <i className="fab fa-telegram text-2xl"></i>
             </a>
           </div>
@@ -307,7 +307,7 @@ export default function Home() {
                   <div className="flex items-end">
                     <Button 
                       type="submit" 
-                      className="w-full bg-temer-blue hover:bg-blue-700 text-white font-semibold"
+                      className="w-full bg-temer-green hover:bg-temer-dark-green text-white font-semibold"
                       data-testid="search-submit-button"
                     >
                       <i className="fas fa-search mr-2"></i>Search
@@ -324,7 +324,7 @@ export default function Home() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <div className="mb-4">
-              <Badge className="bg-temer-blue/10 text-temer-blue text-sm px-4 py-2">TEMER PROPERTIES</Badge>
+              <Badge className="bg-temer-green/10 text-temer-green text-sm px-4 py-2">TEMER PROPERTIES</Badge>
             </div>
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 mb-4">Our Latest Properties</h2>
             <p className="text-lg text-temer-gray max-w-3xl mx-auto">
@@ -406,7 +406,7 @@ export default function Home() {
                     {property.status.map((status, statusIndex) => (
                       <Badge key={statusIndex} className={`text-white text-xs px-3 py-1 ${
                         status === 'For Sale' ? 'bg-green-500' :
-                        status === 'Active' ? 'bg-temer-blue' :
+                        status === 'Active' ? 'bg-temer-green' :
                         'bg-orange-500'
                       }`}>
                         {status}
@@ -428,7 +428,7 @@ export default function Home() {
                 </div>
                 
                 <CardContent className="p-6">
-                  <h3 className="text-xl font-semibold text-gray-800 mb-3 hover:text-temer-blue transition-colors cursor-pointer">{property.title}</h3>
+                  <h3 className="text-xl font-semibold text-gray-800 mb-3 hover:text-temer-green transition-colors cursor-pointer">{property.title}</h3>
                   <p className="text-temer-gray text-sm mb-4 leading-relaxed">{property.description}</p>
                   
                   <div className="flex items-center justify-between mb-4 text-sm text-temer-gray">
@@ -448,13 +448,13 @@ export default function Home() {
                   
                   <div className="flex items-center justify-between">
                     <p className="text-sm text-temer-gray flex items-center">
-                      <i className="fas fa-map-marker-alt mr-1 text-temer-blue"></i>
+                      <i className="fas fa-map-marker-alt mr-1 text-temer-green"></i>
                       {property.location}
                     </p>
                     <div className="flex space-x-2">
                       <Button 
                         size="sm"
-                        className="bg-temer-blue text-white hover:bg-blue-700"
+                        className="bg-temer-green text-white hover:bg-temer-dark-green"
                         onClick={() => window.open('tel:+251975666699')}
                         data-testid={`property-call-${index}`}
                       >
