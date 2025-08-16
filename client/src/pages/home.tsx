@@ -191,7 +191,7 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button 
               size="lg"
-              className="bg-temer-blue hover:bg-blue-700 text-white font-semibold py-4 px-8 text-lg"
+              className="hover:bg-blue-700 font-semibold py-4 px-8 text-[#00ff07] bg-[#ffffff] text-[20px]"
               onClick={() => scrollToSection('properties')}
               data-testid="hero-search-button"
             >
