@@ -56,12 +56,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/properties/:id', async (req: Request, res: Response) => {
     try {
-      const property = await storage.getProperty(req.params.id);
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ error: 'Invalid property ID' });
+      }
+      
+      const property = await storage.getProperty(id);
       if (!property) {
         return res.status(404).json({ error: 'Property not found' });
       }
       
-      const images = await storage.getPropertyImages(req.params.id);
+      const images = await storage.getPropertyImages(id);
       res.json({ ...property, images });
     } catch (error) {
       console.error('Error fetching property:', error);
@@ -140,8 +145,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.put('/api/admin/properties/:id', adminAuth, async (req: Request, res: Response) => {
     try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ error: 'Invalid property ID' });
+      }
+      
       const propertyData = insertPropertySchema.partial().parse(req.body);
-      const property = await storage.updateProperty(req.params.id, propertyData);
+      const property = await storage.updateProperty(id, propertyData);
       
       if (!property) {
         return res.status(404).json({ error: 'Property not found' });
@@ -156,7 +166,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.delete('/api/admin/properties/:id', adminAuth, async (req: Request, res: Response) => {
     try {
-      const success = await storage.deleteProperty(req.params.id);
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ error: 'Invalid property ID' });
+      }
+      
+      const success = await storage.deleteProperty(id);
       
       if (!success) {
         return res.status(404).json({ error: 'Property not found' });
@@ -172,7 +187,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Property image management routes
   app.get('/api/admin/properties/:id/images', adminAuth, async (req: Request, res: Response) => {
     try {
-      const images = await storage.getPropertyImages(req.params.id);
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ error: 'Invalid property ID' });
+      }
+      
+      const images = await storage.getPropertyImages(id);
       res.json(images);
     } catch (error) {
       console.error('Error fetching property images:', error);
@@ -182,9 +202,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/admin/properties/:id/images', adminAuth, async (req: Request, res: Response) => {
     try {
+      const propertyId = parseInt(req.params.id);
+      if (isNaN(propertyId)) {
+        return res.status(400).json({ error: 'Invalid property ID' });
+      }
+      
       const imageData = insertPropertyImageSchema.parse({
         ...req.body,
-        propertyId: req.params.id
+        propertyId
       });
       
       const image = await storage.createPropertyImage(imageData);
@@ -197,7 +222,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.delete('/api/admin/images/:id', adminAuth, async (req: Request, res: Response) => {
     try {
-      const success = await storage.deletePropertyImage(req.params.id);
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ error: 'Invalid image ID' });
+      }
+      
+      const success = await storage.deletePropertyImage(id);
       
       if (!success) {
         return res.status(404).json({ error: 'Image not found' });
@@ -212,8 +242,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.put('/api/admin/images/:id/main', adminAuth, async (req: Request, res: Response) => {
     try {
+      const id = parseInt(req.params.id);
       const { propertyId } = req.body;
-      const success = await storage.setMainImage(propertyId, req.params.id);
+      
+      if (isNaN(id) || isNaN(propertyId)) {
+        return res.status(400).json({ error: 'Invalid image or property ID' });
+      }
+      
+      const success = await storage.setMainImage(propertyId, id);
       
       if (!success) {
         return res.status(404).json({ error: 'Image not found' });

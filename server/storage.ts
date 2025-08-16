@@ -1,7 +1,4 @@
 import { 
-  UserModel, 
-  PropertyModel, 
-  PropertyImageModel,
   type User, 
   type InsertUser, 
   type Property, 
@@ -12,170 +9,152 @@ import {
 
 export interface IStorage {
   // User operations
-  getUser(id: string): Promise<User | undefined>;
+  getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   
   // Property operations
   getAllProperties(): Promise<Property[]>;
-  getProperty(id: string): Promise<Property | undefined>;
+  getProperty(id: number): Promise<Property | undefined>;
   createProperty(property: InsertProperty): Promise<Property>;
-  updateProperty(id: string, property: Partial<InsertProperty>): Promise<Property | undefined>;
-  deleteProperty(id: string): Promise<boolean>;
+  updateProperty(id: number, property: Partial<InsertProperty>): Promise<Property | undefined>;
+  deleteProperty(id: number): Promise<boolean>;
   
   // Property image operations
-  getPropertyImages(propertyId: string): Promise<PropertyImage[]>;
+  getPropertyImages(propertyId: number): Promise<PropertyImage[]>;
   createPropertyImage(image: InsertPropertyImage): Promise<PropertyImage>;
-  deletePropertyImage(id: string): Promise<boolean>;
-  setMainImage(propertyId: string, imageId: string): Promise<boolean>;
+  deletePropertyImage(id: number): Promise<boolean>;
+  setMainImage(propertyId: number, imageId: number): Promise<boolean>;
 }
 
-export class DatabaseStorage implements IStorage {
+export class MemStorage implements IStorage {
+  private users: User[] = [];
+  private properties: Property[] = [];
+  private propertyImages: PropertyImage[] = [];
+  private nextUserId = 1;
+  private nextPropertyId = 1;
+  private nextPropertyImageId = 1;
+
   // User operations
-  async getUser(id: string): Promise<User | undefined> {
-    try {
-      const user = await UserModel.findById(id);
-      return user || undefined;
-    } catch (error) {
-      console.error('Error fetching user:', error);
-      return undefined;
-    }
+  async getUser(id: number): Promise<User | undefined> {
+    return this.users.find(user => user.id === id);
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    try {
-      const user = await UserModel.findOne({ username });
-      return user || undefined;
-    } catch (error) {
-      console.error('Error fetching user by username:', error);
-      return undefined;
-    }
+    return this.users.find(user => user.username === username);
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    try {
-      const user = new UserModel(insertUser);
-      await user.save();
-      return user;
-    } catch (error) {
-      console.error('Error creating user:', error);
-      throw error;
-    }
+    const user: User = {
+      id: this.nextUserId++,
+      ...insertUser,
+      isAdmin: insertUser.isAdmin ?? false,
+      createdAt: new Date(),
+    };
+    this.users.push(user);
+    return user;
   }
 
   // Property operations
   async getAllProperties(): Promise<Property[]> {
-    try {
-      return await PropertyModel.find({ isActive: true })
-        .sort({ createdAt: -1 });
-    } catch (error) {
-      console.error('Error fetching properties:', error);
-      return [];
-    }
+    return this.properties
+      .filter(property => property.isActive)
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
   }
 
-  async getProperty(id: string): Promise<Property | undefined> {
-    try {
-      const property = await PropertyModel.findById(id);
-      return property || undefined;
-    } catch (error) {
-      console.error('Error fetching property:', error);
-      return undefined;
-    }
+  async getProperty(id: number): Promise<Property | undefined> {
+    return this.properties.find(property => property.id === id);
   }
 
-  async createProperty(property: InsertProperty): Promise<Property> {
-    try {
-      const newProperty = new PropertyModel(property);
-      await newProperty.save();
-      return newProperty;
-    } catch (error) {
-      console.error('Error creating property:', error);
-      throw error;
-    }
+  async createProperty(insertProperty: InsertProperty): Promise<Property> {
+    const now = new Date();
+    const property: Property = {
+      id: this.nextPropertyId++,
+      ...insertProperty,
+      bedrooms: insertProperty.bedrooms ?? 0,
+      bathrooms: insertProperty.bathrooms ?? 0,
+      status: insertProperty.status ?? ['For Sale'],
+      imageUrls: insertProperty.imageUrls ?? [],
+      isActive: insertProperty.isActive ?? true,
+      createdAt: now,
+      updatedAt: now,
+    };
+    this.properties.push(property);
+    return property;
   }
 
-  async updateProperty(id: string, property: Partial<InsertProperty>): Promise<Property | undefined> {
-    try {
-      const updatedProperty = await PropertyModel.findByIdAndUpdate(
-        id,
-        { ...property, updatedAt: new Date() },
-        { new: true }
-      );
-      return updatedProperty || undefined;
-    } catch (error) {
-      console.error('Error updating property:', error);
-      return undefined;
-    }
+  async updateProperty(id: number, updates: Partial<InsertProperty>): Promise<Property | undefined> {
+    const propertyIndex = this.properties.findIndex(property => property.id === id);
+    if (propertyIndex === -1) return undefined;
+    
+    this.properties[propertyIndex] = {
+      ...this.properties[propertyIndex],
+      ...updates,
+      updatedAt: new Date(),
+    };
+    
+    return this.properties[propertyIndex];
   }
 
-  async deleteProperty(id: string): Promise<boolean> {
-    try {
-      const result = await PropertyModel.findByIdAndUpdate(
-        id,
-        { isActive: false },
-        { new: true }
-      );
-      return !!result;
-    } catch (error) {
-      console.error('Error deleting property:', error);
-      return false;
-    }
+  async deleteProperty(id: number): Promise<boolean> {
+    const propertyIndex = this.properties.findIndex(property => property.id === id);
+    if (propertyIndex === -1) return false;
+    
+    this.properties[propertyIndex] = {
+      ...this.properties[propertyIndex],
+      isActive: false,
+    };
+    
+    return true;
   }
 
   // Property image operations
-  async getPropertyImages(propertyId: string): Promise<PropertyImage[]> {
-    try {
-      return await PropertyImageModel.find({ propertyId })
-        .sort({ isMain: -1, sortOrder: 1 });
-    } catch (error) {
-      console.error('Error fetching property images:', error);
-      return [];
-    }
+  async getPropertyImages(propertyId: number): Promise<PropertyImage[]> {
+    return this.propertyImages
+      .filter(image => image.propertyId === propertyId)
+      .sort((a, b) => {
+        if (a.isMain && !b.isMain) return -1;
+        if (!a.isMain && b.isMain) return 1;
+        return a.sortOrder - b.sortOrder;
+      });
   }
 
-  async createPropertyImage(image: InsertPropertyImage): Promise<PropertyImage> {
-    try {
-      const newImage = new PropertyImageModel(image);
-      await newImage.save();
-      return newImage;
-    } catch (error) {
-      console.error('Error creating property image:', error);
-      throw error;
-    }
+  async createPropertyImage(insertImage: InsertPropertyImage): Promise<PropertyImage> {
+    const image: PropertyImage = {
+      id: this.nextPropertyImageId++,
+      ...insertImage,
+      description: insertImage.description ?? null,
+      isMain: insertImage.isMain ?? false,
+      sortOrder: insertImage.sortOrder ?? 0,
+      createdAt: new Date(),
+    };
+    this.propertyImages.push(image);
+    return image;
   }
 
-  async deletePropertyImage(id: string): Promise<boolean> {
-    try {
-      const result = await PropertyImageModel.findByIdAndDelete(id);
-      return !!result;
-    } catch (error) {
-      console.error('Error deleting property image:', error);
-      return false;
-    }
+  async deletePropertyImage(id: number): Promise<boolean> {
+    const imageIndex = this.propertyImages.findIndex(image => image.id === id);
+    if (imageIndex === -1) return false;
+    
+    this.propertyImages.splice(imageIndex, 1);
+    return true;
   }
 
-  async setMainImage(propertyId: string, imageId: string): Promise<boolean> {
-    try {
-      // First, unset all main images for this property
-      await PropertyImageModel.updateMany(
-        { propertyId },
-        { isMain: false }
-      );
-      
-      // Then set the specified image as main
-      const result = await PropertyImageModel.findOneAndUpdate(
-        { _id: imageId, propertyId },
-        { isMain: true },
-        { new: true }
-      );
-      
-      return !!result;
-    } catch (error) {
-      console.error('Error setting main image:', error);
-      return false;
-    }
+  async setMainImage(propertyId: number, imageId: number): Promise<boolean> {
+    // First, unset all main images for this property
+    this.propertyImages.forEach(image => {
+      if (image.propertyId === propertyId) {
+        image.isMain = false;
+      }
+    });
+    
+    // Then set the specified image as main
+    const image = this.propertyImages.find(img => img.id === imageId && img.propertyId === propertyId);
+    if (!image) return false;
+    
+    image.isMain = true;
+    return true;
   }
 }
 
-export const storage = new DatabaseStorage();
+export const storage = new MemStorage();
