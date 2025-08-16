@@ -1,0 +1,119 @@
+Create a static, single-page website for a real estate company. The website must be fully responsive, mobile-optimized, and have a modern, professional design. Use the Tailwind CSS framework for all styling.
+
+Website Structure and Sections:
+
+Header:
+
+Implement a sticky navigation bar at the top of the page that remains visible on scroll.
+
+Include a company logo on the left side.
+
+On the right, place navigation links for the following sections:
+
+Home
+
+Projects
+
+Properties
+
+Construction Updates
+
+Blog
+
+About Us
+
+Contact Us
+
+Each link should smoothly scroll the user to the corresponding section on the same page.
+
+Hero Section:
+
+Use a large, high-quality background image of a property or city skyline.
+
+Display a large, engaging headline (e.g., "Find Your Dream Home").
+
+Include a call-to-action button with the text "View Projects" that links to the Projects section.
+
+Property Search Section:
+
+Create a prominent search block with input fields for:
+
+Location
+
+Number of Bedrooms
+
+Property Type (e.g., "Apartment", "Shop")
+
+Status (e.g., "For Sale", "New Offer")
+
+Add a "Search" button to filter and display properties.
+
+About Us Section:
+
+Feature a headline such as "Why Choose Us?".
+
+Use multiple cards or blocks with icons and short descriptions to highlight key company benefits, such as:
+
+Location
+
+Quality
+
+Affordability
+
+Safety & Security
+
+Amenities
+
+This section should be a single column on mobile and a responsive grid on desktop.
+
+Projects Section:
+
+Build an appealing gallery showcasing the company's projects.
+
+Each project should have a thumbnail image, a title (e.g., "LYCEE Apartments"), and a brief description.
+
+Clicking on a project should reveal more details.
+
+Properties Section:
+
+Display a list of available properties using clean, well-designed cards.
+
+Each card should feature a high-quality image, the property's name, the number of beds and baths, the area in square meters, and a link to view more details.
+
+Contact Us Section:
+
+Include a contact form with fields for Name, Email, Phone Number, and Message.
+
+Embed an interactive map showing the company's location.
+
+Display key contact information, including the office address, phone number, and email.
+
+Add links to social media platforms (Facebook, YouTube, Instagram, X-twitter, LinkedIn, and Telegram).
+
+Construction Updates Section:
+
+Showcase progress photos of ongoing projects.
+
+Each image should be accompanied by a title and an update date.
+
+Blog Section:
+
+Display a few of the latest blog posts with a featured image, a title, and a brief summary.
+
+This section should visually highlight the company's recent articles on the real estate market.
+
+Our Team Section:
+
+Introduce the team of Sales Officers and Sales Agents.
+
+For each team member, include a photo, name, title, and contact information (e.g., phone number).
+
+General Design Notes:
+
+Font: Use a clean, modern font that is easy to read.
+
+Color Palette: Use a professional and calming color palette, such as blues, grays, and whites.
+
+Animations: Incorporate subtle animations and hover effects for a more engaging visual experience.
+
+Code: The generated code should be clean, well-commented, and completely self-contained within a single file.
