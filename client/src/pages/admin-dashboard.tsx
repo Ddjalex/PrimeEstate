@@ -242,7 +242,7 @@ export default function AdminDashboard() {
     
     if (editingProperty) {
       updatePropertyMutation.mutate({
-        id: String(editingProperty._id),
+        id: String(editingProperty.id),
         data: propertyForm,
       });
     } else {
@@ -614,7 +614,7 @@ export default function AdminDashboard() {
                 </div>
               ) : (
                 filteredProperties.map((property: PropertyWithImages) => (
-                  <Card key={String(property._id)} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 group overflow-hidden">
+                  <Card key={String(property.id)} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 group overflow-hidden">
                     {/* Property Image */}
                     <div className="relative h-48 overflow-hidden">
                       {property.imageUrls && property.imageUrls.length > 0 ? (
@@ -661,7 +661,7 @@ export default function AdminDashboard() {
                           </Button>
                           <Button
                             size="sm"
-                            onClick={() => handleDelete(String(property._id))}
+                            onClick={() => handleDelete(String(property.id))}
                             className="bg-red-500/90 hover:bg-red-600 text-white w-8 h-8 p-0 shadow-lg"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -732,7 +732,7 @@ export default function AdminDashboard() {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => handleDelete(String(property._id))}
+                          onClick={() => handleDelete(String(property.id))}
                           className="border-red-200 text-red-700 hover:bg-red-50"
                         >
                           <Trash2 className="w-4 h-4 mr-1" />
