@@ -168,7 +168,6 @@ export default function Home() {
           )}
         </nav>
       </header>
-
       {/* Hero Section */}
       <section id="home" className="relative min-h-screen flex items-center justify-center">
         <div 
@@ -183,7 +182,7 @@ export default function Home() {
           <div className="mb-4">
             <Badge className="bg-temer-blue text-white text-sm px-4 py-2 mb-4">MAKE YOUR NEXT MOVE WITH US</Badge>
           </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold mb-6 animate-fade-in">
+          <h1 className="sm:text-5xl lg:text-7xl animate-fade-in text-[#28bd5c] bg-[#7f726a] font-extrabold text-[40px] text-left ml-[4px] mr-[4px] mt-[14px] mb-[14px] pl-[4px] pr-[4px] pt-[-6px] pb-[-6px]">
             TEMER PROPERTIES
           </h1>
           <p className="text-xl sm:text-2xl mb-8 text-gray-200 animate-slide-up max-w-3xl mx-auto">
@@ -234,7 +233,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* Property Search Section */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -321,7 +319,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* Latest Properties Section */}
       <section id="properties" className="py-16 bg-gray-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -490,7 +487,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* Projects Section */}
       <section id="projects" className="py-16 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -532,7 +528,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* Why Choose Us Section */}
       <section id="about" className="py-16 bg-gray-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -617,7 +612,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* Delivered Projects Section */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -659,7 +653,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* Blog Section */}
       <section id="blog" className="py-16 bg-gray-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -730,7 +723,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* Construction Updates Section */}
       <section id="construction" className="py-16 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -789,7 +781,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* Our Team Section */}
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -869,7 +860,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* Contact Us Section */}
       <section id="contact" className="py-16 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -1035,7 +1025,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* Footer */}
       <footer className="bg-gray-800 text-white py-12">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
