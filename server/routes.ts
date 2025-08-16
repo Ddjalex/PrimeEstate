@@ -262,6 +262,73 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Slider routes
+  app.get('/api/slider', async (req: Request, res: Response) => {
+    try {
+      const images = await storage.getSliderImages();
+      res.json(images);
+    } catch (error) {
+      console.error('Error fetching slider images:', error);
+      res.status(500).json({ error: 'Failed to fetch slider images' });
+    }
+  });
+
+  app.post('/api/admin/slider', adminAuth, async (req: Request, res: Response) => {
+    try {
+      const { imageUrl, title, description } = req.body;
+      
+      if (!imageUrl || !title) {
+        return res.status(400).json({ error: 'Image URL and title are required' });
+      }
+      
+      const image = await storage.createSliderImage({ imageUrl, title, description: description || '' });
+      res.json(image);
+    } catch (error) {
+      console.error('Error creating slider image:', error);
+      res.status(500).json({ error: 'Failed to create slider image' });
+    }
+  });
+
+  app.put('/api/admin/slider/:id', adminAuth, async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ error: 'Invalid slider image ID' });
+      }
+      
+      const success = await storage.updateSliderImage(id, req.body);
+      
+      if (!success) {
+        return res.status(404).json({ error: 'Slider image not found' });
+      }
+      
+      res.json({ message: 'Slider image updated successfully' });
+    } catch (error) {
+      console.error('Error updating slider image:', error);
+      res.status(500).json({ error: 'Failed to update slider image' });
+    }
+  });
+
+  app.delete('/api/admin/slider/:id', adminAuth, async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ error: 'Invalid slider image ID' });
+      }
+      
+      const success = await storage.deleteSliderImage(id);
+      
+      if (!success) {
+        return res.status(404).json({ error: 'Slider image not found' });
+      }
+      
+      res.json({ message: 'Slider image deleted successfully' });
+    } catch (error) {
+      console.error('Error deleting slider image:', error);
+      res.status(500).json({ error: 'Failed to delete slider image' });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

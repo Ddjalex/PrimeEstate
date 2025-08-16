@@ -67,6 +67,15 @@ export default function AdminDashboard() {
     imageUrls: [] as string[],
   });
 
+  // Slider state
+  const [sliderForm, setSliderForm] = useState({
+    title: "",
+    description: "",
+    imageUrl: ""
+  });
+  const [showSliderForm, setShowSliderForm] = useState(false);
+  const [editingSlider, setEditingSlider] = useState<any>(null);
+
   // Check authentication
   useEffect(() => {
     const auth = sessionStorage.getItem("admin_auth");
@@ -83,6 +92,12 @@ export default function AdminDashboard() {
   const { data: properties = [], isLoading } = useQuery({
     queryKey: ["/api/properties"],
     queryFn: () => apiRequest("/api/properties"),
+  });
+
+  // Fetch slider images
+  const { data: sliderImages = [], isLoading: isLoadingSlider } = useQuery({
+    queryKey: ["/api/slider"],
+    queryFn: () => apiRequest("/api/slider"),
   });
 
   // Calculate dashboard statistics
@@ -221,6 +236,68 @@ export default function AdminDashboard() {
     },
   });
 
+  // Slider mutations
+  const createSliderMutation = useMutation({
+    mutationFn: (data: any) =>
+      apiRequest("/api/admin/slider", {
+        method: "POST",
+        headers: getAuthHeaders(),
+        body: JSON.stringify(data),
+      }),
+    onSuccess: () => {
+      toast({ title: "Success", description: "Slider image created successfully" });
+      queryClient.invalidateQueries({ queryKey: ["/api/slider"] });
+      resetSliderForm();
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to create slider image",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const updateSliderMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: any }) =>
+      apiRequest(`/api/admin/slider/${id}`, {
+        method: "PUT",
+        headers: getAuthHeaders(),
+        body: JSON.stringify(data),
+      }),
+    onSuccess: () => {
+      toast({ title: "Success", description: "Slider image updated successfully" });
+      queryClient.invalidateQueries({ queryKey: ["/api/slider"] });
+      resetSliderForm();
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to update slider image",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const deleteSliderMutation = useMutation({
+    mutationFn: (id: string) =>
+      apiRequest(`/api/admin/slider/${id}`, {
+        method: "DELETE",
+        headers: getAuthHeaders(),
+      }),
+    onSuccess: () => {
+      toast({ title: "Success", description: "Slider image deleted successfully" });
+      queryClient.invalidateQueries({ queryKey: ["/api/slider"] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to delete slider image",
+        variant: "destructive",
+      });
+    },
+  });
+
   const resetForm = () => {
     setPropertyForm({
       title: "",
@@ -235,6 +312,16 @@ export default function AdminDashboard() {
     });
     setEditingProperty(null);
     setShowPropertyForm(false);
+  };
+
+  const resetSliderForm = () => {
+    setSliderForm({
+      title: "",
+      description: "",
+      imageUrl: ""
+    });
+    setEditingSlider(null);
+    setShowSliderForm(false);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -311,6 +398,36 @@ export default function AdminDashboard() {
     });
   };
 
+  // Slider handlers
+  const handleSliderSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (editingSlider) {
+      updateSliderMutation.mutate({
+        id: String(editingSlider.id),
+        data: sliderForm,
+      });
+    } else {
+      createSliderMutation.mutate(sliderForm);
+    }
+  };
+
+  const handleSliderEdit = (slider: any) => {
+    setEditingSlider(slider);
+    setSliderForm({
+      title: slider.title,
+      description: slider.description,
+      imageUrl: slider.imageUrl
+    });
+    setShowSliderForm(true);
+  };
+
+  const handleSliderDelete = (id: string) => {
+    if (confirm("Are you sure you want to delete this slider image?")) {
+      deleteSliderMutation.mutate(id);
+    }
+  };
+
   const COLORS = ['hsl(88, 50%, 53%)', 'hsl(88, 45%, 65%)', 'hsl(88, 40%, 75%)', 'hsl(88, 35%, 85%)', 'hsl(88, 30%, 90%)'];
 
   return (
@@ -357,7 +474,7 @@ export default function AdminDashboard() {
       {/* Main Content */}
       <div className="px-6 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-8">
+          <TabsList className="grid w-full grid-cols-4 mb-8">
             <TabsTrigger value="overview" className="flex items-center space-x-2">
               <Home className="w-4 h-4" />
               <span>Overview</span>
@@ -365,6 +482,10 @@ export default function AdminDashboard() {
             <TabsTrigger value="properties" className="flex items-center space-x-2">
               <Building2 className="w-4 h-4" />
               <span>Properties</span>
+            </TabsTrigger>
+            <TabsTrigger value="slider" className="flex items-center space-x-2">
+              <Eye className="w-4 h-4" />
+              <span>Hero Slider</span>
             </TabsTrigger>
             <TabsTrigger value="analytics" className="flex items-center space-x-2">
               <TrendingUp className="w-4 h-4" />
@@ -744,6 +865,162 @@ export default function AdminDashboard() {
                 ))
               )}
             </div>
+          </TabsContent>
+
+          {/* Hero Slider Tab */}
+          <TabsContent value="slider" className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">Hero Slider Management</h2>
+                <p className="text-gray-600">Manage the images displayed in the homepage hero slider</p>
+              </div>
+              <Button
+                onClick={() => setShowSliderForm(true)}
+                className="bg-temer-green hover:bg-temer-dark-green text-white"
+                data-testid="button-add-slider"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Add Slider Image
+              </Button>
+            </div>
+
+            {isLoadingSlider ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[1, 2, 3].map((i) => (
+                  <Card key={i} className="animate-pulse">
+                    <div className="h-48 bg-gray-200 rounded-t-lg" />
+                    <CardContent className="p-4">
+                      <div className="h-4 bg-gray-200 rounded mb-2" />
+                      <div className="h-4 bg-gray-200 rounded w-2/3 mb-4" />
+                      <div className="flex justify-between">
+                        <div className="h-8 bg-gray-200 rounded w-1/4" />
+                        <div className="h-8 bg-gray-200 rounded w-1/4" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {sliderImages.map((slider: any) => (
+                  <Card key={slider.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                    <div className="relative h-48 overflow-hidden">
+                      <img
+                        src={slider.imageUrl}
+                        alt={slider.title}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                      <div className="absolute bottom-4 left-4 right-4 text-white">
+                        <h3 className="font-semibold text-lg mb-1">{slider.title}</h3>
+                        <p className="text-sm text-white/80">{slider.description}</p>
+                      </div>
+                    </div>
+                    <CardContent className="p-4">
+                      <div className="flex justify-between items-center">
+                        <Badge className="bg-green-100 text-green-800">
+                          Active
+                        </Badge>
+                        <div className="flex space-x-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleSliderEdit(slider)}
+                            data-testid={`button-edit-slider-${slider.id}`}
+                          >
+                            <Edit className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleSliderDelete(String(slider.id))}
+                            className="border-red-200 text-red-700 hover:bg-red-50"
+                            data-testid={`button-delete-slider-${slider.id}`}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+
+            {/* Slider Form Modal */}
+            {showSliderForm && (
+              <Card className="mt-8 border-2 border-temer-green">
+                <CardHeader>
+                  <CardTitle className="text-temer-green">
+                    {editingSlider ? "Edit Slider Image" : "Add New Slider Image"}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handleSliderSubmit} className="space-y-6">
+                    <div>
+                      <Label htmlFor="slider-title">Title</Label>
+                      <Input
+                        id="slider-title"
+                        value={sliderForm.title}
+                        onChange={(e) => setSliderForm({ ...sliderForm, title: e.target.value })}
+                        required
+                        placeholder="Enter compelling title"
+                        className="mt-1"
+                        data-testid="input-slider-title"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="slider-description">Description</Label>
+                      <Textarea
+                        id="slider-description"
+                        value={sliderForm.description}
+                        onChange={(e) => setSliderForm({ ...sliderForm, description: e.target.value })}
+                        placeholder="Enter description"
+                        rows={3}
+                        className="mt-1"
+                        data-testid="textarea-slider-description"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="slider-image">Image URL</Label>
+                      <Input
+                        id="slider-image"
+                        value={sliderForm.imageUrl}
+                        onChange={(e) => setSliderForm({ ...sliderForm, imageUrl: e.target.value })}
+                        required
+                        placeholder="https://example.com/image.jpg"
+                        className="mt-1"
+                        data-testid="input-slider-image"
+                      />
+                      <p className="text-sm text-gray-500 mt-1">
+                        Use high-quality images (1920x1080 or larger) for best results
+                      </p>
+                    </div>
+
+                    <div className="flex justify-end space-x-4 pt-4 border-t border-gray-200">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={resetSliderForm}
+                        data-testid="button-cancel-slider"
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        type="submit"
+                        className="bg-temer-green hover:bg-temer-dark-green text-white"
+                        disabled={createSliderMutation.isPending || updateSliderMutation.isPending}
+                        data-testid="button-save-slider"
+                      >
+                        {editingSlider ? "Update Slider" : "Add Slider"}
+                      </Button>
+                    </div>
+                  </form>
+                </CardContent>
+              </Card>
+            )}
           </TabsContent>
 
           {/* Analytics Tab */}
