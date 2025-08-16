@@ -152,8 +152,8 @@ export default function AdminDashboard() {
         property.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
         property.description.toLowerCase().includes(searchQuery.toLowerCase());
         
-      const matchesType = filterType === "" || property.propertyType === filterType;
-      const matchesLocation = filterLocation === "" || property.location === filterLocation;
+      const matchesType = filterType === "" || filterType === "all" || property.propertyType === filterType;
+      const matchesLocation = filterLocation === "" || filterLocation === "all" || property.location === filterLocation;
       
       return matchesSearch && matchesType && matchesLocation;
     });
@@ -242,7 +242,7 @@ export default function AdminDashboard() {
     
     if (editingProperty) {
       updatePropertyMutation.mutate({
-        id: editingProperty._id,
+        id: String(editingProperty._id),
         data: propertyForm,
       });
     } else {
@@ -554,7 +554,7 @@ export default function AdminDashboard() {
                         <SelectValue placeholder="Filter by type" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">All Types</SelectItem>
+                        <SelectItem value="all">All Types</SelectItem>
                         <SelectItem value="apartment">Apartment</SelectItem>
                         <SelectItem value="shops">Shops</SelectItem>
                       </SelectContent>
@@ -564,8 +564,8 @@ export default function AdminDashboard() {
                         <SelectValue placeholder="Filter by location" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">All Locations</SelectItem>
-                        {Array.from(new Set(properties.map((p: Property) => p.location))).map((location: string) => (
+                        <SelectItem value="all">All Locations</SelectItem>
+                        {Array.from(new Set((properties as Property[]).map((p: Property) => p.location))).map((location: string) => (
                           <SelectItem key={location} value={location}>{location}</SelectItem>
                         ))}
                       </SelectContent>
@@ -614,7 +614,7 @@ export default function AdminDashboard() {
                 </div>
               ) : (
                 filteredProperties.map((property: PropertyWithImages) => (
-                  <Card key={property._id} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 group overflow-hidden">
+                  <Card key={String(property._id)} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 group overflow-hidden">
                     {/* Property Image */}
                     <div className="relative h-48 overflow-hidden">
                       {property.imageUrls && property.imageUrls.length > 0 ? (
@@ -661,7 +661,7 @@ export default function AdminDashboard() {
                           </Button>
                           <Button
                             size="sm"
-                            onClick={() => handleDelete(property._id)}
+                            onClick={() => handleDelete(String(property._id))}
                             className="bg-red-500/90 hover:bg-red-600 text-white w-8 h-8 p-0 shadow-lg"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -732,7 +732,7 @@ export default function AdminDashboard() {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => handleDelete(property._id)}
+                          onClick={() => handleDelete(String(property._id))}
                           className="border-red-200 text-red-700 hover:bg-red-50"
                         >
                           <Trash2 className="w-4 h-4 mr-1" />
