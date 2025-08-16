@@ -1045,7 +1045,8 @@ export default function Home() {
               <p className="text-gray-400 text-sm">
                 © 2025 Temer Properties. All rights reserved. | 
                 <a href="#" className="hover:text-white ml-2">Terms of Use</a> | 
-                <a href="#" className="hover:text-white ml-2">Privacy Policy</a>
+                <a href="#" className="hover:text-white ml-2">Privacy Policy</a> | 
+                <a href="/admin/login" className="hover:text-white ml-2" data-testid="link-admin">Admin</a>
               </p>
             </div>
           </div>

@@ -1,8 +1,16 @@
 # Overview
 
-This is a full-stack real estate website for Temer Properties, an Ethiopian real estate company. The application is built as a single-page website featuring property listings, search functionality, and company information. It's designed to be fully responsive and mobile-optimized, targeting potential buyers looking for apartments and properties in Addis Ababa, Ethiopia.
+This is a full-stack real estate website for Temer Properties, an Ethiopian real estate company. The application is built as a single-page website featuring property listings, search functionality, company information, and a comprehensive admin dashboard for property management. It's designed to be fully responsive and mobile-optimized, targeting potential buyers looking for apartments and properties in Addis Ababa, Ethiopia.
 
-The project serves as a modern real estate showcase with sections for property search, project listings, construction updates, blog content, and contact information.
+The project serves as a modern real estate showcase with sections for property search, project listings, construction updates, blog content, contact information, and an admin portal for uploading and managing real estate images with descriptions.
+
+## Recent Changes (August 16, 2025)
+- ✅ Added comprehensive admin dashboard functionality with property management
+- ✅ Implemented PostgreSQL database with properties, property images, and user tables
+- ✅ Created admin authentication system with login/register functionality
+- ✅ Built property CRUD operations with image URL management
+- ✅ Updated button styling to green text (#00ff07) on white background
+- ✅ Seeded database with default admin user (admin/admin123)
 
 # User Preferences
 
