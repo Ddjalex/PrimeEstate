@@ -207,28 +207,50 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
+      {/* Enhanced Header - Temer Style */}
+      <div className="bg-white shadow-lg border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-              <p className="text-gray-600">Temer Properties Management</p>
+          <div className="flex justify-between items-center py-8">
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-green-600 to-green-700 rounded-xl flex items-center justify-center">
+                <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">Temer Properties</h1>
+                <p className="text-green-600 font-medium">Admin Dashboard</p>
+              </div>
             </div>
-            <div className="flex space-x-4">
+            <div className="flex items-center space-x-4">
+              <div className="hidden sm:flex items-center text-sm text-gray-500">
+                <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                {properties.length} Properties Listed
+              </div>
               <Button
                 onClick={() => setLocation("/")}
                 variant="outline"
+                className="border-green-200 text-green-700 hover:bg-green-50"
                 data-testid="button-view-website"
               >
+                <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
                 View Website
               </Button>
               <Button
                 onClick={handleLogout}
-                variant="destructive"
+                variant="outline"
+                className="border-red-200 text-red-700 hover:bg-red-50"
                 data-testid="button-logout"
               >
+                <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
                 Logout
               </Button>
             </div>
@@ -237,16 +259,24 @@ export default function AdminDashboard() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Actions */}
-        <div className="mb-8">
-          <Button
-            onClick={() => setShowPropertyForm(true)}
-            className="bg-temer-blue hover:bg-blue-700 text-white"
-            data-testid="button-add-property"
-          >
-            <i className="fas fa-plus mr-2"></i>
-            Add New Property
-          </Button>
+        {/* Enhanced Actions Bar */}
+        <div className="mb-10">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900">Property Management</h2>
+              <p className="text-gray-600">Manage your real estate listings</p>
+            </div>
+            <Button
+              onClick={() => setShowPropertyForm(true)}
+              className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-3"
+              data-testid="button-add-property"
+            >
+              <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+              Add New Property
+            </Button>
+          </div>
         </div>
 
         {/* Property Form Modal */}
@@ -450,59 +480,161 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* Properties Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Properties Grid - Temer Style */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {isLoading ? (
-            <div className="col-span-full text-center py-8">
-              <p>Loading properties...</p>
+            <div className="col-span-full text-center py-12">
+              <div className="animate-pulse">
+                <div className="text-lg text-gray-500">Loading properties...</div>
+              </div>
             </div>
           ) : properties.length === 0 ? (
-            <div className="col-span-full text-center py-8">
-              <p className="text-gray-600">No properties found. Create your first property!</p>
+            <div className="col-span-full text-center py-12">
+              <div className="text-center">
+                <div className="text-gray-400 mb-4">
+                  <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">No properties yet</h3>
+                <p className="text-gray-500">Get started by creating your first property listing.</p>
+              </div>
             </div>
           ) : (
             properties.map((property: PropertyWithImages) => (
-              <Card key={property.id} className="shadow-lg">
-                {property.imageUrls && property.imageUrls.length > 0 && (
-                  <img
-                    src={property.imageUrls[0]}
-                    alt={property.title}
-                    className="w-full h-48 object-cover"
-                  />
-                )}
-                <CardContent className="p-6">
-                  <div className="flex flex-wrap gap-1 mb-2">
+              <Card key={property.id} className="group hover:shadow-xl transition-all duration-300 border-0 shadow-lg bg-white rounded-lg overflow-hidden">
+                {/* Property Image Container */}
+                <div className="relative h-64 overflow-hidden">
+                  {property.imageUrls && property.imageUrls.length > 0 ? (
+                    <img
+                      src={property.imageUrls[0]}
+                      alt={property.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center">
+                      <svg className="w-16 h-16 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                      </svg>
+                    </div>
+                  )}
+                  
+                  {/* Status Badges */}
+                  <div className="absolute top-3 left-3 flex gap-2">
                     {property.status?.map((status) => (
-                      <Badge key={status} variant="secondary" className="text-xs">
+                      <Badge 
+                        key={status} 
+                        className={`text-xs font-medium px-3 py-1 text-white border-0 ${
+                          status === 'For Sale' 
+                            ? 'bg-green-600 hover:bg-green-700' 
+                            : status === 'Active'
+                            ? 'bg-blue-600 hover:bg-blue-700'
+                            : status === 'New Offer'
+                            ? 'bg-orange-600 hover:bg-orange-700'
+                            : 'bg-gray-600 hover:bg-gray-700'
+                        }`}
+                      >
                         {status}
                       </Badge>
                     ))}
                   </div>
-                  <h3 className="text-lg font-semibold mb-2">{property.title}</h3>
-                  <p className="text-gray-600 text-sm mb-2">{property.location}</p>
-                  <p className="text-gray-700 text-sm mb-4 line-clamp-2">{property.description}</p>
+
+                  {/* Action Icons */}
+                  <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleEdit(property)}
+                        className="bg-white/90 hover:bg-white p-2 rounded-full shadow-lg transition-colors duration-200"
+                        data-testid={`button-edit-${property.id}`}
+                      >
+                        <svg className="w-4 h-4 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                      </button>
+                      <button
+                        onClick={() => handleDelete(property.id)}
+                        className="bg-red-500/90 hover:bg-red-600 p-2 rounded-full shadow-lg transition-colors duration-200"
+                        data-testid={`button-delete-${property.id}`}
+                      >
+                        <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Property Content */}
+                <CardContent className="p-6">
+                  <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-green-600 transition-colors duration-200">
+                    {property.title}
+                  </h3>
                   
-                  <div className="flex justify-between text-sm text-gray-600 mb-4">
-                    <span>Beds: {property.bedrooms}</span>
-                    <span>Baths: {property.bathrooms}</span>
-                    <span>{property.size} m²</span>
+                  <p className="text-gray-600 text-sm mb-4 line-clamp-3 leading-relaxed">
+                    {property.description}
+                  </p>
+                  
+                  {/* Property Details */}
+                  <div className="grid grid-cols-3 gap-4 mb-4 py-3 px-4 bg-gray-50 rounded-lg">
+                    <div className="text-center">
+                      <div className="text-lg font-bold text-gray-900">
+                        {property.bedrooms || 0}
+                      </div>
+                      <div className="text-xs text-gray-500 font-medium">
+                        Beds
+                      </div>
+                    </div>
+                    <div className="text-center border-l border-r border-gray-200">
+                      <div className="text-lg font-bold text-gray-900">
+                        {property.bathrooms || 0}
+                      </div>
+                      <div className="text-xs text-gray-500 font-medium">
+                        Baths
+                      </div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-lg font-bold text-gray-900">
+                        {property.size}
+                      </div>
+                      <div className="text-xs text-gray-500 font-medium">
+                        m²
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="flex justify-end space-x-2">
+                  {/* Location */}
+                  <div className="flex items-center text-gray-600 mb-4">
+                    <svg className="w-4 h-4 mr-2 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span className="text-sm font-medium">{property.location}</span>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="grid grid-cols-2 gap-3">
                     <Button
-                      size="sm"
                       variant="outline"
+                      size="sm"
                       onClick={() => handleEdit(property)}
+                      className="border-green-200 text-green-700 hover:bg-green-50 hover:border-green-300 transition-colors duration-200"
                       data-testid={`button-edit-${property.id}`}
                     >
+                      <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
                       Edit
                     </Button>
                     <Button
+                      variant="outline"
                       size="sm"
-                      variant="destructive"
                       onClick={() => handleDelete(property.id)}
+                      className="border-red-200 text-red-700 hover:bg-red-50 hover:border-red-300 transition-colors duration-200"
                       data-testid={`button-delete-${property.id}`}
                     >
+                      <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
                       Delete
                     </Button>
                   </div>
