@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -26,6 +26,11 @@ export function FileUpload({
   const [previewImages, setPreviewImages] = useState<string[]>(existingImages);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+
+  // Sync previewImages with existingImages when prop changes
+  useEffect(() => {
+    setPreviewImages(existingImages);
+  }, [existingImages]);
 
   const getAuthHeaders = () => ({
     Authorization: `Basic ${sessionStorage.getItem("admin_auth")}`,
