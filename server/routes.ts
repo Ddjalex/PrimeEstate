@@ -186,6 +186,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Protected admin property management routes
   app.post('/api/admin/properties', adminAuth, async (req: Request, res: Response) => {
     try {
+      console.log('Received request body:', req.body);
+      console.log('Request headers:', req.headers);
+      
       const propertyData = insertPropertySchema.parse(req.body);
       const property = await storage.createProperty(propertyData);
       res.json(property);
