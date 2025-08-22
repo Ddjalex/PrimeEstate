@@ -340,9 +340,6 @@ export default function AdminDashboard() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Debug: Log the form data being submitted
-    console.log("Submitting property form:", propertyForm);
-    
     // Validate that required fields have values
     if (!propertyForm.title || !propertyForm.description || !propertyForm.location || !propertyForm.propertyType || !propertyForm.size) {
       toast({

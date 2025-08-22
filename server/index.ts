@@ -37,6 +37,10 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Connect to MongoDB first
+  const { connectToMongoDB } = await import("./mongodb");
+  await connectToMongoDB();
+  
   // Initialize storage and create default admin user
   const { storage } = await import("./storage");
   const bcrypt = await import("bcrypt");
