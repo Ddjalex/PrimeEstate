@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { FileUpload } from "@/components/ui/file-upload";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -73,6 +74,7 @@ export default function AdminDashboard() {
     description: "",
     imageUrl: ""
   });
+  const [sliderImageFiles, setSliderImageFiles] = useState<string[]>([]);
   const [showSliderForm, setShowSliderForm] = useState(false);
   const [editingSlider, setEditingSlider] = useState<any>(null);
 
@@ -320,6 +322,7 @@ export default function AdminDashboard() {
       description: "",
       imageUrl: ""
     });
+    setSliderImageFiles([]);
     setEditingSlider(null);
     setShowSliderForm(false);
   };
@@ -402,13 +405,18 @@ export default function AdminDashboard() {
   const handleSliderSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    const formData = {
+      ...sliderForm,
+      imageUrl: sliderImageFiles[0] || sliderForm.imageUrl
+    };
+    
     if (editingSlider) {
       updateSliderMutation.mutate({
         id: String(editingSlider.id),
-        data: sliderForm,
+        data: formData,
       });
     } else {
-      createSliderMutation.mutate(sliderForm);
+      createSliderMutation.mutate(formData);
     }
   };
 
@@ -419,6 +427,7 @@ export default function AdminDashboard() {
       description: slider.description,
       imageUrl: slider.imageUrl
     });
+    setSliderImageFiles(slider.imageUrl ? [slider.imageUrl] : []);
     setShowSliderForm(true);
   };
 
@@ -984,17 +993,20 @@ export default function AdminDashboard() {
                     </div>
 
                     <div>
-                      <Label htmlFor="slider-image">Image URL</Label>
-                      <Input
-                        id="slider-image"
-                        value={sliderForm.imageUrl}
-                        onChange={(e) => setSliderForm({ ...sliderForm, imageUrl: e.target.value })}
-                        required
-                        placeholder="https://example.com/image.jpg"
+                      <Label>Slider Image</Label>
+                      <FileUpload
+                        type="slider"
+                        multiple={false}
+                        onUploadComplete={(imageUrls) => {
+                          setSliderImageFiles(imageUrls);
+                          if (imageUrls.length > 0) {
+                            setSliderForm({ ...sliderForm, imageUrl: imageUrls[0] });
+                          }
+                        }}
+                        existingImages={sliderImageFiles}
                         className="mt-1"
-                        data-testid="input-slider-image"
                       />
-                      <p className="text-sm text-gray-500 mt-1">
+                      <p className="text-sm text-gray-500 mt-2">
                         Use high-quality images (1920x1080 or larger) for best results
                       </p>
                     </div>
@@ -1233,39 +1245,21 @@ export default function AdminDashboard() {
                   </div>
                 </div>
 
-                {/* Image URLs */}
+                {/* Property Images */}
                 <div>
                   <Label>Property Images</Label>
-                  <div className="space-y-2 mt-2">
-                    {propertyForm.imageUrls.map((url, index) => (
-                      <div key={index} className="flex gap-2">
-                        <Input
-                          value={url}
-                          onChange={(e) => updateImageUrl(index, e.target.value)}
-                          placeholder="Enter image URL"
-                          className="flex-1"
-                        />
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          onClick={() => removeImageUrl(index)}
-                          className="border-red-200 text-red-700 hover:bg-red-50"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    ))}
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={addImageUrl}
-                      className="w-full border-temer-green/30 text-temer-green hover:bg-temer-green/10"
-                    >
-                      <Plus className="w-4 h-4 mr-2" />
-                      Add Image URL
-                    </Button>
-                  </div>
+                  <FileUpload
+                    type="property"
+                    multiple={true}
+                    onUploadComplete={(imageUrls) => {
+                      setPropertyForm({ ...propertyForm, imageUrls });
+                    }}
+                    existingImages={propertyForm.imageUrls}
+                    className="mt-2"
+                  />
+                  <p className="text-sm text-gray-500 mt-2">
+                    Upload multiple high-quality images to showcase your property
+                  </p>
                 </div>
 
                 <div className="flex justify-end space-x-4 pt-4 border-t border-gray-200">

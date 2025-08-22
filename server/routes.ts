@@ -3,6 +3,13 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertPropertySchema, insertPropertyImageSchema, insertUserSchema, type User } from "@shared/schema";
 import * as bcrypt from "bcrypt";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Extend Express Request type to include user
 declare global {
@@ -42,7 +49,52 @@ const adminAuth = async (req: Request, res: Response, next: Function) => {
   }
 };
 
+// Configure multer for file uploads
+const storage_multer = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadPath = req.baseUrl.includes('slider') ? 'uploads/slider' : 'uploads/properties';
+    
+    // Ensure directory exists
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath, { recursive: true });
+    }
+    
+    cb(null, uploadPath);
+  },
+  filename: (req, file, cb) => {
+    // Generate unique filename with timestamp
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({
+  storage: storage_multer,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB limit
+  },
+  fileFilter: (req, file, cb) => {
+    // Check file type
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only image files are allowed!'));
+    }
+  }
+});
+
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Serve uploaded images statically
+  app.use('/uploads', (req, res, next) => {
+    // Set CORS headers for images
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    next();
+  });
+  
+  // Import express.static dynamically to serve files
+  const express = await import('express');
+  app.use('/uploads', express.static('uploads'));
   // Property routes (public)
   app.get('/api/properties', async (req: Request, res: Response) => {
     try {
@@ -326,6 +378,53 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error deleting slider image:', error);
       res.status(500).json({ error: 'Failed to delete slider image' });
+    }
+  });
+
+  // File upload routes
+  app.post('/api/admin/upload/property', adminAuth, upload.single('image'), async (req: Request, res: Response) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: 'No image file provided' });
+      }
+      
+      const imageUrl = `/uploads/properties/${req.file.filename}`;
+      res.json({ imageUrl, filename: req.file.filename });
+    } catch (error) {
+      console.error('Error uploading property image:', error);
+      res.status(500).json({ error: 'Failed to upload image' });
+    }
+  });
+
+  app.post('/api/admin/upload/slider', adminAuth, upload.single('image'), async (req: Request, res: Response) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: 'No image file provided' });
+      }
+      
+      const imageUrl = `/uploads/slider/${req.file.filename}`;
+      res.json({ imageUrl, filename: req.file.filename });
+    } catch (error) {
+      console.error('Error uploading slider image:', error);
+      res.status(500).json({ error: 'Failed to upload image' });
+    }
+  });
+
+  app.post('/api/admin/upload/multiple', adminAuth, upload.array('images', 10), async (req: Request, res: Response) => {
+    try {
+      if (!req.files || !Array.isArray(req.files) || req.files.length === 0) {
+        return res.status(400).json({ error: 'No image files provided' });
+      }
+      
+      const imageUrls = req.files.map((file: any) => ({
+        imageUrl: `/uploads/properties/${file.filename}`,
+        filename: file.filename
+      }));
+      
+      res.json({ images: imageUrls });
+    } catch (error) {
+      console.error('Error uploading multiple images:', error);
+      res.status(500).json({ error: 'Failed to upload images' });
     }
   });
 
