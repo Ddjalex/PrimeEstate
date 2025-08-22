@@ -340,8 +340,6 @@ export default function AdminDashboard() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    console.log("Form submission - propertyForm state:", propertyForm);
-    
     // Validate that required fields have values
     if (!propertyForm.title || !propertyForm.description || !propertyForm.location || !propertyForm.propertyType || !propertyForm.size) {
       toast({
@@ -365,8 +363,6 @@ export default function AdminDashboard() {
       imageUrls: propertyForm.imageUrls || [],
       isActive: true
     };
-    
-    console.log("Sending formData:", formData);
     
     if (editingProperty) {
       updatePropertyMutation.mutate({

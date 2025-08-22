@@ -11,13 +11,21 @@ export async function apiRequest(
   url: string,
   options: RequestInit = {}
 ): Promise<any> {
+  const defaultHeaders = {
+    "Content-Type": "application/json",
+  };
+  
+  // Merge headers properly
+  const mergedHeaders = {
+    ...defaultHeaders,
+    ...options.headers,
+  };
+
   const res = await fetch(url, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
     credentials: "include",
     ...options,
+    headers: mergedHeaders,
   });
 
   await throwIfResNotOk(res);
