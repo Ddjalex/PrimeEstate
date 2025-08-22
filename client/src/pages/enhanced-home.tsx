@@ -49,15 +49,15 @@ export function HomePage() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center space-x-2">
-            <Building className="h-8 w-8 text-temer-blue" />
-            <span className="text-2xl font-bold text-temer-blue">Temer Properties</span>
+            <Building className="h-8 w-8 text-temer-green" />
+            <span className="text-2xl font-bold text-temer-gold drop-shadow-sm">Temer Properties</span>
           </div>
           <div className="hidden md:flex items-center space-x-8">
-            <a href="#home" className="text-gray-700 hover:text-temer-blue font-medium">Home</a>
-            <a href="#properties" className="text-gray-700 hover:text-temer-blue font-medium">Properties</a>
-            <a href="#about" className="text-gray-700 hover:text-temer-blue font-medium">About</a>
-            <a href="#contact" className="text-gray-700 hover:text-temer-blue font-medium">Contact</a>
-            <Button className="bg-temer-blue hover:bg-temer-blue-dark">
+            <a href="#home" className="text-gray-700 hover:text-temer-green font-medium transition-colors">Home</a>
+            <a href="#properties" className="text-gray-700 hover:text-temer-green font-medium transition-colors">Properties</a>
+            <a href="#about" className="text-gray-700 hover:text-temer-green font-medium transition-colors">About</a>
+            <a href="#contact" className="text-gray-700 hover:text-temer-green font-medium transition-colors">Contact</a>
+            <Button className="bg-temer-green hover:bg-temer-dark-green text-white font-semibold">
               Admin Login
             </Button>
           </div>
@@ -130,7 +130,7 @@ export function HomePage() {
                     </SelectContent>
                   </Select>
                 </div>
-                <Button className="h-12 bg-temer-blue hover:bg-temer-blue-dark" data-testid="button-search">
+                <Button className="h-12 bg-temer-green hover:bg-temer-dark-green text-white font-semibold" data-testid="button-search">
                   <Search className="w-4 h-4 mr-2" />
                   Search
                 </Button>
@@ -141,14 +141,14 @@ export function HomePage() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-temer-blue text-white">
+      <section className="py-16 bg-gradient-to-br from-temer-green to-temer-dark-green text-white">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8">
             {featuredStats.map((stat, index) => (
               <div key={index} className="text-center">
-                <stat.icon className="h-12 w-12 mx-auto mb-4 text-temer-gold" />
+                <stat.icon className="h-12 w-12 mx-auto mb-4 text-temer-gold drop-shadow-lg" />
                 <div className="text-3xl font-bold mb-2">{stat.value}</div>
-                <div className="text-temer-gold">{stat.label}</div>
+                <div className="text-temer-light-gold font-medium">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -193,7 +193,7 @@ export function HomePage() {
                     />
                     <div className="absolute top-4 left-4">
                       {property.status?.map((status, index) => (
-                        <Badge key={index} className="bg-temer-blue text-white mr-2">
+                        <Badge key={index} className="bg-temer-green text-white mr-2 font-medium">
                           {status}
                         </Badge>
                       ))}
@@ -224,7 +224,7 @@ export function HomePage() {
                         {formatPrice(property.size || 0)}
                       </div>
                     </div>
-                    <Button className="w-full bg-temer-blue hover:bg-temer-blue-dark" data-testid={`button-view-${property.id}`}>
+                    <Button className="w-full bg-temer-green hover:bg-temer-dark-green text-white font-semibold" data-testid={`button-view-${property.id}`}>
                       View Details
                     </Button>
                   </CardContent>
@@ -242,7 +242,7 @@ export function HomePage() {
           )}
 
           <div className="text-center mt-12">
-            <Button variant="outline" size="lg" className="border-temer-blue text-temer-blue hover:bg-temer-blue hover:text-white">
+            <Button variant="outline" size="lg" className="border-temer-green text-temer-green hover:bg-temer-green hover:text-white font-semibold">
               View All Properties
             </Button>
           </div>
@@ -259,21 +259,21 @@ export function HomePage() {
             </p>
             <div className="grid md:grid-cols-3 gap-8 mt-12">
               <div className="text-center">
-                <div className="w-16 h-16 bg-temer-blue rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-gradient-to-br from-temer-green to-temer-dark-green rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
                   <Building className="h-8 w-8 text-white" />
                 </div>
                 <h3 className="text-xl font-semibold mb-2">Premium Properties</h3>
                 <p className="text-gray-600">Carefully curated selection of high-quality properties</p>
               </div>
               <div className="text-center">
-                <div className="w-16 h-16 bg-temer-blue rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-gradient-to-br from-temer-green to-temer-dark-green rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
                   <Users className="h-8 w-8 text-white" />
                 </div>
                 <h3 className="text-xl font-semibold mb-2">Expert Service</h3>
                 <p className="text-gray-600">Professional guidance throughout your property journey</p>
               </div>
               <div className="text-center">
-                <div className="w-16 h-16 bg-temer-blue rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-gradient-to-br from-temer-green to-temer-dark-green rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
                   <Award className="h-8 w-8 text-white" />
                 </div>
                 <h3 className="text-xl font-semibold mb-2">Trusted Partner</h3>
@@ -301,15 +301,15 @@ export function HomePage() {
                 <h3 className="text-xl font-semibold mb-6">Get In Touch</h3>
                 <div className="space-y-4">
                   <div className="flex items-center">
-                    <Phone className="h-5 w-5 text-temer-blue mr-3" />
+                    <Phone className="h-5 w-5 text-temer-green mr-3" />
                     <span>+251 911 123 456</span>
                   </div>
                   <div className="flex items-center">
-                    <Mail className="h-5 w-5 text-temer-blue mr-3" />
+                    <Mail className="h-5 w-5 text-temer-green mr-3" />
                     <span>info@temerproperties.com</span>
                   </div>
                   <div className="flex items-start">
-                    <LocationIcon className="h-5 w-5 text-temer-blue mr-3 mt-1" />
+                    <LocationIcon className="h-5 w-5 text-temer-green mr-3 mt-1" />
                     <span>Bole Road, Addis Ababa, Ethiopia</span>
                   </div>
                 </div>
@@ -328,11 +328,11 @@ export function HomePage() {
                     </div>
                     <Input placeholder="Phone Number" data-testid="input-contact-phone" />
                     <textarea
-                      className="w-full min-h-[120px] p-3 border border-gray-200 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-temer-blue"
+                      className="w-full min-h-[120px] p-3 border border-gray-200 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-temer-green focus:border-temer-green transition-colors"
                       placeholder="Your Message"
                       data-testid="textarea-contact-message"
                     />
-                    <Button className="w-full bg-temer-blue hover:bg-temer-blue-dark" data-testid="button-send-message">
+                    <Button className="w-full bg-temer-green hover:bg-temer-dark-green text-white font-semibold" data-testid="button-send-message">
                       Send Message
                     </Button>
                   </form>
@@ -348,8 +348,8 @@ export function HomePage() {
         <div className="container mx-auto px-4">
           <div className="text-center">
             <div className="flex items-center justify-center space-x-2 mb-4">
-              <Building className="h-8 w-8 text-temer-gold" />
-              <span className="text-2xl font-bold">Temer Properties</span>
+              <Building className="h-8 w-8 text-temer-gold drop-shadow-lg" />
+              <span className="text-2xl font-bold text-temer-light-gold">Temer Properties</span>
             </div>
             <p className="text-gray-400 mb-6">
               Your trusted partner in Ethiopian real estate since 2009

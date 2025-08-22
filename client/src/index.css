@@ -39,9 +39,15 @@
   --font-serif: Georgia, serif;
   --font-mono: Menlo, monospace;
   --radius: 0.5rem;
-  --temer-green: hsl(88 50% 53%);
-  --temer-light-green: hsl(88 45% 58%);
-  --temer-dark-green: hsl(88 55% 38%);
+  /* Temer Properties Professional Brand Colors */
+  --temer-green: hsl(88 67% 47%);          /* Vibrant lime green from logo */
+  --temer-light-green: hsl(88 62% 52%);    /* Lighter variant */
+  --temer-dark-green: hsl(88 72% 35%);     /* Darker variant for hover states */
+  --temer-gold: hsl(43 85% 42%);           /* Professional bronze/gold */
+  --temer-light-gold: hsl(43 80% 58%);     /* Lighter gold variant */
+  --temer-dark-gold: hsl(43 90% 32%);      /* Darker gold for depth */
+  --temer-blue: hsl(88 67% 47%);           /* Alias for green (legacy) */
+  --temer-blue-dark: hsl(88 72% 35%);      /* Alias for dark green (legacy) */
   --temer-gray: hsl(215.4 16.3% 46.9%);
 }
 

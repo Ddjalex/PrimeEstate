@@ -61,8 +61,15 @@ export default {
           border: "var(--sidebar-border)",
           ring: "var(--sidebar-ring)",
         },
+        /* Temer Properties Professional Brand Colors */
+        "temer-green": "var(--temer-green)",
+        "temer-light-green": "var(--temer-light-green)", 
+        "temer-dark-green": "var(--temer-dark-green)",
+        "temer-gold": "var(--temer-gold)",
+        "temer-light-gold": "var(--temer-light-gold)",
+        "temer-dark-gold": "var(--temer-dark-gold)",
         "temer-blue": "var(--temer-blue)",
-        "temer-light-blue": "var(--temer-light-blue)",
+        "temer-blue-dark": "var(--temer-blue-dark)",
         "temer-gray": "var(--temer-gray)",
       },
       fontFamily: {
