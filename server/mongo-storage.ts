@@ -12,8 +12,8 @@ import { UserModel, PropertyModel, PropertyImageModel, SliderImageModel } from "
 export class MongoStorage implements IStorage {
   
   // User operations
-  async getUser(id: number): Promise<User | undefined> {
-    const user = await UserModel.findOne({ id }).lean();
+  async getUser(id: string): Promise<User | undefined> {
+    const user = await UserModel.findById(id).lean();
     return user ? this.convertMongoUser(user) : undefined;
   }
 
@@ -39,8 +39,8 @@ export class MongoStorage implements IStorage {
     return properties.map(p => this.convertMongoProperty(p));
   }
 
-  async getProperty(id: number): Promise<Property | undefined> {
-    const property = await PropertyModel.findOne({ id }).lean();
+  async getProperty(id: string): Promise<Property | undefined> {
+    const property = await PropertyModel.findById(id).lean();
     return property ? this.convertMongoProperty(property) : undefined;
   }
 
@@ -60,25 +60,25 @@ export class MongoStorage implements IStorage {
     return this.convertMongoProperty(property.toObject());
   }
 
-  async updateProperty(id: number, updates: Partial<InsertProperty>): Promise<Property | undefined> {
-    const property = await PropertyModel.findOneAndUpdate(
-      { id },
+  async updateProperty(id: string, updates: Partial<InsertProperty>): Promise<Property | undefined> {
+    const property = await PropertyModel.findByIdAndUpdate(
+      id,
       { ...updates, updatedAt: new Date() },
       { new: true }
     ).lean();
     return property ? this.convertMongoProperty(property) : undefined;
   }
 
-  async deleteProperty(id: number): Promise<boolean> {
-    const result = await PropertyModel.updateOne(
-      { id },
+  async deleteProperty(id: string): Promise<boolean> {
+    const result = await PropertyModel.findByIdAndUpdate(
+      id,
       { isActive: false }
     );
-    return result.modifiedCount > 0;
+    return result !== null;
   }
 
   // Property image operations
-  async getPropertyImages(propertyId: number): Promise<PropertyImage[]> {
+  async getPropertyImages(propertyId: string): Promise<PropertyImage[]> {
     const images = await PropertyImageModel.find({ propertyId })
       .sort({ isMain: -1, sortOrder: 1 })
       .lean();
@@ -96,12 +96,12 @@ export class MongoStorage implements IStorage {
     return this.convertMongoPropertyImage(image.toObject());
   }
 
-  async deletePropertyImage(id: number): Promise<boolean> {
-    const result = await PropertyImageModel.deleteOne({ id });
-    return result.deletedCount > 0;
+  async deletePropertyImage(id: string): Promise<boolean> {
+    const result = await PropertyImageModel.findByIdAndDelete(id);
+    return result !== null;
   }
 
-  async setMainImage(propertyId: number, imageId: number): Promise<boolean> {
+  async setMainImage(propertyId: string, imageId: string): Promise<boolean> {
     // First, unset all main images for this property
     await PropertyImageModel.updateMany(
       { propertyId },
@@ -109,19 +109,19 @@ export class MongoStorage implements IStorage {
     );
     
     // Then set the specified image as main
-    const result = await PropertyImageModel.updateOne(
-      { id: imageId, propertyId },
+    const result = await PropertyImageModel.findByIdAndUpdate(
+      imageId,
       { isMain: true }
     );
     
-    return result.modifiedCount > 0;
+    return result !== null;
   }
 
   // Slider operations
   async getSliderImages() {
     const images = await SliderImageModel.find({ isActive: true }).lean();
     return images.map(img => ({
-      id: (img as any).id || (img as any)._id,
+      id: String((img as any)._id),
       imageUrl: img.imageUrl,
       title: img.title,
       description: img.description,
@@ -137,7 +137,7 @@ export class MongoStorage implements IStorage {
     await image.save();
     const savedImage = image.toObject();
     return {
-      id: savedImage.id || savedImage._id,
+      id: String(savedImage._id),
       imageUrl: savedImage.imageUrl,
       title: savedImage.title,
       description: savedImage.description,
@@ -145,20 +145,20 @@ export class MongoStorage implements IStorage {
     };
   }
 
-  async updateSliderImage(id: number, updates: { imageUrl?: string; title?: string; description?: string; isActive?: boolean }) {
-    const result = await SliderImageModel.updateOne({ id }, updates);
-    return result.modifiedCount > 0;
+  async updateSliderImage(id: string, updates: { imageUrl?: string; title?: string; description?: string; isActive?: boolean }) {
+    const result = await SliderImageModel.findByIdAndUpdate(id, updates);
+    return result !== null;
   }
 
-  async deleteSliderImage(id: number) {
-    const result = await SliderImageModel.deleteOne({ id });
-    return result.deletedCount > 0;
+  async deleteSliderImage(id: string) {
+    const result = await SliderImageModel.findByIdAndDelete(id);
+    return result !== null;
   }
 
   // Helper methods to convert MongoDB documents to our types
   private convertMongoUser(mongoUser: any): User {
     return {
-      id: mongoUser.id || mongoUser._id,
+      id: String(mongoUser._id),
       username: mongoUser.username,
       password: mongoUser.password,
       isAdmin: mongoUser.isAdmin,
@@ -168,7 +168,7 @@ export class MongoStorage implements IStorage {
 
   private convertMongoProperty(mongoProperty: any): Property {
     return {
-      id: mongoProperty.id || mongoProperty._id,
+      id: String(mongoProperty._id),
       title: mongoProperty.title,
       description: mongoProperty.description,
       location: mongoProperty.location,
@@ -186,7 +186,7 @@ export class MongoStorage implements IStorage {
 
   private convertMongoPropertyImage(mongoImage: any): PropertyImage {
     return {
-      id: mongoImage.id || mongoImage._id,
+      id: String(mongoImage._id),
       propertyId: mongoImage.propertyId,
       imageUrl: mongoImage.imageUrl,
       description: mongoImage.description,

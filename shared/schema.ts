@@ -56,10 +56,10 @@ export const insertPropertyImageSchema = createInsertSchema(propertyImages).omit
   createdAt: true,
 });
 
-// Types
+// Types - Override ID types to use string for MongoDB compatibility
 export type InsertUser = z.infer<typeof insertUserSchema>;
-export type User = typeof users.$inferSelect;
-export type Property = typeof properties.$inferSelect;
+export type User = Omit<typeof users.$inferSelect, 'id'> & { id: string };
+export type Property = Omit<typeof properties.$inferSelect, 'id'> & { id: string };
 export type InsertProperty = z.infer<typeof insertPropertySchema>;
-export type PropertyImage = typeof propertyImages.$inferSelect;
-export type InsertPropertyImage = z.infer<typeof insertPropertyImageSchema>;
+export type PropertyImage = Omit<typeof propertyImages.$inferSelect, 'id' | 'propertyId'> & { id: string; propertyId: string };
+export type InsertPropertyImage = Omit<z.infer<typeof insertPropertyImageSchema>, 'propertyId'> & { propertyId: string };

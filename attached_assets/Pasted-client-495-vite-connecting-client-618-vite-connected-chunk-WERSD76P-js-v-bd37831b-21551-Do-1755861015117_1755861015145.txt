@@ -1,0 +1,37 @@
+client:495 [vite] connecting...
+client:618 [vite] connected.
+chunk-WERSD76P.js?v=bd37831b:21551 Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+[Violation] Forced reflow while executing JavaScript took 40ms
+chunk-WERSD76P.js?v=bd37831b:377 [Violation] 'message' handler took 186ms
+[Violation] Forced reflow while executing JavaScript took 72ms
+login:1 [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) <input data-replit-metadata=​"client/​src/​pages/​admin-login.tsx:​73:​14" data-component-name=​"Input" type=​"password" class=​"flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:​border-0 file:​bg-transparent file:​text-sm file:​font-medium file:​text-foreground placeholder:​text-muted-foreground focus-visible:​outline-none focus-visible:​ring-2 focus-visible:​ring-ring focus-visible:​ring-offset-2 disabled:​cursor-not-allowed disabled:​opacity-50 md:​text-sm" id=​"password" required data-testid=​"input-password" value>​flex
+chunk-WERSD76P.js?v=bd37831b:377 [Violation] 'message' handler took 193ms
+chunk-WERSD76P.js?v=bd37831b:3671 [Violation] 'click' handler took 1132ms
+[Violation] 'click' handler took 1132ms
+queryClient.ts:14  DELETE https://552d0f41-60db-4d83-9f4e-a4a24f4d5d68-00-gm0l09lq2d9z.spock.replit.dev/api/admin/properties/68a84c985765c80e662a0b2f 404 (Not Found)
+apiRequest @ queryClient.ts:14
+mutationFn @ admin-dashboard.tsx:230
+fn @ @tanstack_react-query.js?v=bd37831b:1189
+run @ @tanstack_react-query.js?v=bd37831b:494
+start @ @tanstack_react-query.js?v=bd37831b:536
+execute @ @tanstack_react-query.js?v=bd37831b:1225
+await in execute
+mutate @ @tanstack_react-query.js?v=bd37831b:2630
+(anonymous) @ @tanstack_react-query.js?v=bd37831b:3295
+handleDelete @ admin-dashboard.tsx:381
+onClick @ admin-dashboard.tsx:814
+callCallback2 @ chunk-WERSD76P.js?v=bd37831b:3674
+invokeGuardedCallbackDev @ chunk-WERSD76P.js?v=bd37831b:3699
+invokeGuardedCallback @ chunk-WERSD76P.js?v=bd37831b:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-WERSD76P.js?v=bd37831b:3736
+executeDispatch @ chunk-WERSD76P.js?v=bd37831b:7014
+processDispatchQueueItemsInOrder @ chunk-WERSD76P.js?v=bd37831b:7034
+processDispatchQueue @ chunk-WERSD76P.js?v=bd37831b:7043
+dispatchEventsForPlugins @ chunk-WERSD76P.js?v=bd37831b:7051
+(anonymous) @ chunk-WERSD76P.js?v=bd37831b:7174
+batchedUpdates$1 @ chunk-WERSD76P.js?v=bd37831b:18913
+batchedUpdates @ chunk-WERSD76P.js?v=bd37831b:3579
+dispatchEventForPluginEventSystem @ chunk-WERSD76P.js?v=bd37831b:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-WERSD76P.js?v=bd37831b:5478
+dispatchEvent @ chunk-WERSD76P.js?v=bd37831b:5472
+dispatchDiscreteEvent @ chunk-WERSD76P.js?v=bd37831b:5449

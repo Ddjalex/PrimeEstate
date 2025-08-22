@@ -108,8 +108,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/properties/:id', async (req: Request, res: Response) => {
     try {
-      const id = parseInt(req.params.id);
-      if (isNaN(id)) {
+      const id = req.params.id;
+      if (!id) {
         return res.status(400).json({ error: 'Invalid property ID' });
       }
       
@@ -197,8 +197,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.put('/api/admin/properties/:id', adminAuth, async (req: Request, res: Response) => {
     try {
-      const id = parseInt(req.params.id);
-      if (isNaN(id)) {
+      const id = req.params.id;
+      if (!id) {
         return res.status(400).json({ error: 'Invalid property ID' });
       }
       
@@ -218,8 +218,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.delete('/api/admin/properties/:id', adminAuth, async (req: Request, res: Response) => {
     try {
-      const id = parseInt(req.params.id);
-      if (isNaN(id)) {
+      const id = req.params.id;
+      if (!id) {
         return res.status(400).json({ error: 'Invalid property ID' });
       }
       
@@ -239,8 +239,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Property image management routes
   app.get('/api/admin/properties/:id/images', adminAuth, async (req: Request, res: Response) => {
     try {
-      const id = parseInt(req.params.id);
-      if (isNaN(id)) {
+      const id = req.params.id;
+      if (!id) {
         return res.status(400).json({ error: 'Invalid property ID' });
       }
       
@@ -254,14 +254,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/admin/properties/:id/images', adminAuth, async (req: Request, res: Response) => {
     try {
-      const propertyId = parseInt(req.params.id);
-      if (isNaN(propertyId)) {
+      const propertyId = req.params.id;
+      if (!propertyId) {
         return res.status(400).json({ error: 'Invalid property ID' });
       }
       
       const imageData = insertPropertyImageSchema.parse({
         ...req.body,
-        propertyId
+        propertyId: propertyId
       });
       
       const image = await storage.createPropertyImage(imageData);
@@ -274,8 +274,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.delete('/api/admin/images/:id', adminAuth, async (req: Request, res: Response) => {
     try {
-      const id = parseInt(req.params.id);
-      if (isNaN(id)) {
+      const id = req.params.id;
+      if (!id) {
         return res.status(400).json({ error: 'Invalid image ID' });
       }
       
@@ -294,10 +294,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.put('/api/admin/images/:id/main', adminAuth, async (req: Request, res: Response) => {
     try {
-      const id = parseInt(req.params.id);
+      const id = req.params.id;
       const { propertyId } = req.body;
       
-      if (isNaN(id) || isNaN(propertyId)) {
+      if (!id || !propertyId) {
         return res.status(400).json({ error: 'Invalid image or property ID' });
       }
       
@@ -343,8 +343,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.put('/api/admin/slider/:id', adminAuth, async (req: Request, res: Response) => {
     try {
-      const id = parseInt(req.params.id);
-      if (isNaN(id)) {
+      const id = req.params.id;
+      if (!id) {
         return res.status(400).json({ error: 'Invalid slider image ID' });
       }
       
@@ -363,8 +363,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.delete('/api/admin/slider/:id', adminAuth, async (req: Request, res: Response) => {
     try {
-      const id = parseInt(req.params.id);
-      if (isNaN(id)) {
+      const id = req.params.id;
+      if (!id) {
         return res.status(400).json({ error: 'Invalid slider image ID' });
       }
       

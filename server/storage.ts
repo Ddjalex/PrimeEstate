@@ -9,28 +9,28 @@ import {
 
 export interface IStorage {
   // User operations
-  getUser(id: number): Promise<User | undefined>;
+  getUser(id: string): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   
   // Property operations
   getAllProperties(): Promise<Property[]>;
-  getProperty(id: number): Promise<Property | undefined>;
+  getProperty(id: string): Promise<Property | undefined>;
   createProperty(property: InsertProperty): Promise<Property>;
-  updateProperty(id: number, property: Partial<InsertProperty>): Promise<Property | undefined>;
-  deleteProperty(id: number): Promise<boolean>;
+  updateProperty(id: string, property: Partial<InsertProperty>): Promise<Property | undefined>;
+  deleteProperty(id: string): Promise<boolean>;
   
   // Property image operations
-  getPropertyImages(propertyId: number): Promise<PropertyImage[]>;
+  getPropertyImages(propertyId: string): Promise<PropertyImage[]>;
   createPropertyImage(image: InsertPropertyImage): Promise<PropertyImage>;
-  deletePropertyImage(id: number): Promise<boolean>;
-  setMainImage(propertyId: number, imageId: number): Promise<boolean>;
+  deletePropertyImage(id: string): Promise<boolean>;
+  setMainImage(propertyId: string, imageId: string): Promise<boolean>;
   
   // Slider operations
-  getSliderImages(): Promise<{ id: number; imageUrl: string; title: string; description: string; isActive: boolean }[]>;
-  createSliderImage(image: { imageUrl: string; title: string; description: string }): Promise<{ id: number; imageUrl: string; title: string; description: string; isActive: boolean }>;
-  updateSliderImage(id: number, image: { imageUrl?: string; title?: string; description?: string; isActive?: boolean }): Promise<boolean>;
-  deleteSliderImage(id: number): Promise<boolean>;
+  getSliderImages(): Promise<{ id: string; imageUrl: string; title: string; description: string; isActive: boolean }[]>;
+  createSliderImage(image: { imageUrl: string; title: string; description: string }): Promise<{ id: string; imageUrl: string; title: string; description: string; isActive: boolean }>;
+  updateSliderImage(id: string, image: { imageUrl?: string; title?: string; description?: string; isActive?: boolean }): Promise<boolean>;
+  deleteSliderImage(id: string): Promise<boolean>;
 }
 
 export class MemStorage implements IStorage {
@@ -128,8 +128,8 @@ export class MemStorage implements IStorage {
   }
 
   // User operations
-  async getUser(id: number): Promise<User | undefined> {
-    return this.users.find(user => user.id === id);
+  async getUser(id: string): Promise<User | undefined> {
+    return this.users.find(user => String(user.id) === id);
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
@@ -137,14 +137,17 @@ export class MemStorage implements IStorage {
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const user: User = {
+    const newUser = {
       id: this.nextUserId++,
       ...insertUser,
       isAdmin: insertUser.isAdmin ?? false,
       createdAt: new Date(),
     };
-    this.users.push(user);
-    return user;
+    this.users.push(newUser);
+    return {
+      ...newUser,
+      id: String(newUser.id)
+    };
   }
 
   // Property operations
@@ -154,13 +157,13 @@ export class MemStorage implements IStorage {
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
   }
 
-  async getProperty(id: number): Promise<Property | undefined> {
-    return this.properties.find(property => property.id === id);
+  async getProperty(id: string): Promise<Property | undefined> {
+    return this.properties.find(property => String(property.id) === id);
   }
 
   async createProperty(insertProperty: InsertProperty): Promise<Property> {
     const now = new Date();
-    const property: Property = {
+    const newProperty = {
       id: this.nextPropertyId++,
       ...insertProperty,
       bedrooms: insertProperty.bedrooms ?? 0,
@@ -171,12 +174,15 @@ export class MemStorage implements IStorage {
       createdAt: now,
       updatedAt: now,
     };
-    this.properties.push(property);
-    return property;
+    this.properties.push(newProperty);
+    return {
+      ...newProperty,
+      id: String(newProperty.id)
+    };
   }
 
-  async updateProperty(id: number, updates: Partial<InsertProperty>): Promise<Property | undefined> {
-    const propertyIndex = this.properties.findIndex(property => property.id === id);
+  async updateProperty(id: string, updates: Partial<InsertProperty>): Promise<Property | undefined> {
+    const propertyIndex = this.properties.findIndex(property => String(property.id) === id);
     if (propertyIndex === -1) return undefined;
     
     this.properties[propertyIndex] = {
@@ -188,8 +194,8 @@ export class MemStorage implements IStorage {
     return this.properties[propertyIndex];
   }
 
-  async deleteProperty(id: number): Promise<boolean> {
-    const propertyIndex = this.properties.findIndex(property => property.id === id);
+  async deleteProperty(id: string): Promise<boolean> {
+    const propertyIndex = this.properties.findIndex(property => String(property.id) === id);
     if (propertyIndex === -1) return false;
     
     this.properties[propertyIndex] = {
@@ -201,9 +207,9 @@ export class MemStorage implements IStorage {
   }
 
   // Property image operations
-  async getPropertyImages(propertyId: number): Promise<PropertyImage[]> {
+  async getPropertyImages(propertyId: string): Promise<PropertyImage[]> {
     return this.propertyImages
-      .filter(image => image.propertyId === propertyId)
+      .filter(image => String(image.propertyId) === propertyId)
       .sort((a, b) => {
         if (a.isMain && !b.isMain) return -1;
         if (!a.isMain && b.isMain) return 1;
@@ -212,7 +218,7 @@ export class MemStorage implements IStorage {
   }
 
   async createPropertyImage(insertImage: InsertPropertyImage): Promise<PropertyImage> {
-    const image: PropertyImage = {
+    const newImage = {
       id: this.nextPropertyImageId++,
       ...insertImage,
       description: insertImage.description ?? null,
@@ -220,28 +226,32 @@ export class MemStorage implements IStorage {
       sortOrder: insertImage.sortOrder ?? 0,
       createdAt: new Date(),
     };
-    this.propertyImages.push(image);
-    return image;
+    this.propertyImages.push(newImage);
+    return {
+      ...newImage,
+      id: String(newImage.id),
+      propertyId: insertImage.propertyId
+    };
   }
 
-  async deletePropertyImage(id: number): Promise<boolean> {
-    const imageIndex = this.propertyImages.findIndex(image => image.id === id);
+  async deletePropertyImage(id: string): Promise<boolean> {
+    const imageIndex = this.propertyImages.findIndex(image => String(image.id) === id);
     if (imageIndex === -1) return false;
     
     this.propertyImages.splice(imageIndex, 1);
     return true;
   }
 
-  async setMainImage(propertyId: number, imageId: number): Promise<boolean> {
+  async setMainImage(propertyId: string, imageId: string): Promise<boolean> {
     // First, unset all main images for this property
     this.propertyImages.forEach(image => {
-      if (image.propertyId === propertyId) {
+      if (String(image.propertyId) === propertyId) {
         image.isMain = false;
       }
     });
     
     // Then set the specified image as main
-    const image = this.propertyImages.find(img => img.id === imageId && img.propertyId === propertyId);
+    const image = this.propertyImages.find(img => String(img.id) === imageId && String(img.propertyId) === propertyId);
     if (!image) return false;
     
     image.isMain = true;
@@ -250,7 +260,10 @@ export class MemStorage implements IStorage {
 
   // Slider operations
   async getSliderImages() {
-    return this.sliderImages.filter(img => img.isActive);
+    return this.sliderImages.filter(img => img.isActive).map(img => ({
+      ...img,
+      id: String(img.id)
+    }));
   }
 
   async createSliderImage(insertImage: { imageUrl: string; title: string; description: string }) {
@@ -260,11 +273,14 @@ export class MemStorage implements IStorage {
       isActive: true
     };
     this.sliderImages.push(image);
-    return image;
+    return {
+      ...image,
+      id: String(image.id)
+    };
   }
 
-  async updateSliderImage(id: number, updates: { imageUrl?: string; title?: string; description?: string; isActive?: boolean }) {
-    const imageIndex = this.sliderImages.findIndex(img => img.id === id);
+  async updateSliderImage(id: string, updates: { imageUrl?: string; title?: string; description?: string; isActive?: boolean }) {
+    const imageIndex = this.sliderImages.findIndex(img => String(img.id) === id);
     if (imageIndex === -1) return false;
     
     this.sliderImages[imageIndex] = {
@@ -274,8 +290,8 @@ export class MemStorage implements IStorage {
     return true;
   }
 
-  async deleteSliderImage(id: number) {
-    const imageIndex = this.sliderImages.findIndex(img => img.id === id);
+  async deleteSliderImage(id: string) {
+    const imageIndex = this.sliderImages.findIndex(img => String(img.id) === id);
     if (imageIndex === -1) return false;
     
     this.sliderImages.splice(imageIndex, 1);
