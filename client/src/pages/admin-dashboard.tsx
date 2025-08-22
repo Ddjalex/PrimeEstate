@@ -340,6 +340,19 @@ export default function AdminDashboard() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Debug: Log the form data being submitted
+    console.log("Submitting property form:", propertyForm);
+    
+    // Validate that required fields have values
+    if (!propertyForm.title || !propertyForm.description || !propertyForm.location || !propertyForm.propertyType || !propertyForm.size) {
+      toast({
+        title: "Validation Error",
+        description: "Please fill in all required fields",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     if (editingProperty) {
       updatePropertyMutation.mutate({
         id: String(editingProperty.id),
