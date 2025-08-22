@@ -340,6 +340,8 @@ export default function AdminDashboard() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    console.log("Form submission - propertyForm state:", propertyForm);
+    
     // Validate that required fields have values
     if (!propertyForm.title || !propertyForm.description || !propertyForm.location || !propertyForm.propertyType || !propertyForm.size) {
       toast({
@@ -350,13 +352,29 @@ export default function AdminDashboard() {
       return;
     }
     
+    // Ensure form data is properly structured
+    const formData = {
+      title: propertyForm.title.trim(),
+      description: propertyForm.description.trim(),
+      location: propertyForm.location.trim(),
+      propertyType: propertyForm.propertyType,
+      bedrooms: Number(propertyForm.bedrooms) || 0,
+      bathrooms: Number(propertyForm.bathrooms) || 0,
+      size: Number(propertyForm.size),
+      status: propertyForm.status.length > 0 ? propertyForm.status : ["For Sale"],
+      imageUrls: propertyForm.imageUrls || [],
+      isActive: true
+    };
+    
+    console.log("Sending formData:", formData);
+    
     if (editingProperty) {
       updatePropertyMutation.mutate({
         id: String(editingProperty.id),
-        data: propertyForm,
+        data: formData,
       });
     } else {
-      createPropertyMutation.mutate(propertyForm);
+      createPropertyMutation.mutate(formData);
     }
   };
 
