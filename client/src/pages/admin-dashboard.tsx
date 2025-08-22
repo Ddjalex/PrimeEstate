@@ -435,6 +435,13 @@ export default function AdminDashboard() {
     });
   };
 
+  // Sync slider form when editing
+  useEffect(() => {
+    if (editingSlider && editingSlider.imageUrl) {
+      setSliderImageFiles([editingSlider.imageUrl]);
+    }
+  }, [editingSlider]);
+
   // Slider handlers
   const handleSliderSubmit = (e: React.FormEvent) => {
     e.preventDefault();
