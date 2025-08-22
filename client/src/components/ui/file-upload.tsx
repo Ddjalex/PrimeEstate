@@ -61,6 +61,7 @@ export function FileUpload({
       const newImages = multiple ? [...previewImages, ...uploadedUrls] : uploadedUrls;
       
       setPreviewImages(newImages);
+      // Force immediate update to parent component
       onUploadComplete(newImages);
       
       toast({

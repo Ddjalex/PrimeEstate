@@ -94,6 +94,8 @@ export default function AdminDashboard() {
   const { data: properties = [], isLoading } = useQuery({
     queryKey: ["/api/properties"],
     queryFn: () => apiRequest("/api/properties"),
+    refetchOnWindowFocus: true,
+    staleTime: 0, // Always consider data stale to ensure fresh fetches
   });
 
   // Fetch slider images
@@ -186,7 +188,9 @@ export default function AdminDashboard() {
       }),
     onSuccess: () => {
       toast({ title: "Success", description: "Property created successfully" });
+      // Force immediate refetch of data
       queryClient.invalidateQueries({ queryKey: ["/api/properties"] });
+      queryClient.refetchQueries({ queryKey: ["/api/properties"] });
       resetForm();
     },
     onError: (error: any) => {
@@ -207,7 +211,9 @@ export default function AdminDashboard() {
       }),
     onSuccess: () => {
       toast({ title: "Success", description: "Property updated successfully" });
+      // Force immediate refetch of data
       queryClient.invalidateQueries({ queryKey: ["/api/properties"] });
+      queryClient.refetchQueries({ queryKey: ["/api/properties"] });
       resetForm();
     },
     onError: (error: any) => {
@@ -248,7 +254,9 @@ export default function AdminDashboard() {
       }),
     onSuccess: () => {
       toast({ title: "Success", description: "Slider image created successfully" });
+      // Force immediate refetch of data
       queryClient.invalidateQueries({ queryKey: ["/api/slider"] });
+      queryClient.refetchQueries({ queryKey: ["/api/slider"] });
       resetSliderForm();
     },
     onError: (error: any) => {
@@ -269,7 +277,9 @@ export default function AdminDashboard() {
       }),
     onSuccess: () => {
       toast({ title: "Success", description: "Slider image updated successfully" });
+      // Force immediate refetch of data
       queryClient.invalidateQueries({ queryKey: ["/api/slider"] });
+      queryClient.refetchQueries({ queryKey: ["/api/slider"] });
       resetSliderForm();
     },
     onError: (error: any) => {
