@@ -8,6 +8,7 @@ import {
 } from "@shared/schema";
 import { IStorage } from "./storage";
 import { UserModel, PropertyModel, PropertyImageModel, SliderImageModel } from "./mongodb";
+import mongoose from "mongoose";
 
 export class MongoStorage implements IStorage {
   
@@ -40,8 +41,18 @@ export class MongoStorage implements IStorage {
   }
 
   async getProperty(id: string): Promise<Property | undefined> {
-    const property = await PropertyModel.findById(id).lean();
-    return property ? this.convertMongoProperty(property) : undefined;
+    try {
+      // Validate ObjectId format
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        console.log('Invalid ObjectId format:', id);
+        return undefined;
+      }
+      const property = await PropertyModel.findById(id).lean();
+      return property ? this.convertMongoProperty(property) : undefined;
+    } catch (error) {
+      console.error('Error finding property by ID:', error);
+      return undefined;
+    }
   }
 
   async createProperty(insertProperty: InsertProperty): Promise<Property> {
@@ -61,20 +72,40 @@ export class MongoStorage implements IStorage {
   }
 
   async updateProperty(id: string, updates: Partial<InsertProperty>): Promise<Property | undefined> {
-    const property = await PropertyModel.findByIdAndUpdate(
-      id,
-      { ...updates, updatedAt: new Date() },
-      { new: true }
-    ).lean();
-    return property ? this.convertMongoProperty(property) : undefined;
+    try {
+      // Validate ObjectId format
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        console.log('Invalid ObjectId format for update:', id);
+        return undefined;
+      }
+      const property = await PropertyModel.findByIdAndUpdate(
+        id,
+        { ...updates, updatedAt: new Date() },
+        { new: true }
+      ).lean();
+      return property ? this.convertMongoProperty(property) : undefined;
+    } catch (error) {
+      console.error('Error updating property:', error);
+      return undefined;
+    }
   }
 
   async deleteProperty(id: string): Promise<boolean> {
-    const result = await PropertyModel.findByIdAndUpdate(
-      id,
-      { isActive: false }
-    );
-    return result !== null;
+    try {
+      // Validate ObjectId format
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        console.log('Invalid ObjectId format for delete:', id);
+        return false;
+      }
+      const result = await PropertyModel.findByIdAndUpdate(
+        id,
+        { isActive: false }
+      );
+      return result !== null;
+    } catch (error) {
+      console.error('Error deleting property:', error);
+      return false;
+    }
   }
 
   // Property image operations
