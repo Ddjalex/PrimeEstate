@@ -1,4 +1,5 @@
 import { Search, MapPin, Bed, Bath, Square, Phone, Mail, MapPin as LocationIcon, Star, Users, Building, Award } from "lucide-react";
+import temerLogo from '@assets/images (2)_1755853378467.jpg';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -48,9 +49,16 @@ export function HomePage() {
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <Building className="h-8 w-8 text-temer-green" />
-            <span className="text-2xl font-bold text-temer-gold drop-shadow-sm">Temer Properties</span>
+          <div className="flex items-center space-x-3">
+            <img 
+              src={temerLogo} 
+              alt="Temer Properties Logo" 
+              className="h-12 w-auto object-contain"
+            />
+            <div className="flex flex-col">
+              <span className="text-2xl font-bold text-temer-gold drop-shadow-sm leading-none">Temer</span>
+              <span className="text-sm font-medium text-temer-green uppercase tracking-wider leading-none">PROPERTIES</span>
+            </div>
           </div>
           <div className="hidden md:flex items-center space-x-8">
             <a href="#home" className="text-gray-700 hover:text-temer-green font-medium transition-colors">Home</a>
@@ -347,9 +355,16 @@ export function HomePage() {
       <footer className="bg-gray-900 text-white py-12">
         <div className="container mx-auto px-4">
           <div className="text-center">
-            <div className="flex items-center justify-center space-x-2 mb-4">
-              <Building className="h-8 w-8 text-temer-gold drop-shadow-lg" />
-              <span className="text-2xl font-bold text-temer-light-gold">Temer Properties</span>
+            <div className="flex items-center justify-center space-x-3 mb-4">
+              <img 
+                src={temerLogo} 
+                alt="Temer Properties Logo" 
+                className="h-10 w-auto object-contain opacity-90"
+              />
+              <div className="flex flex-col">
+                <span className="text-2xl font-bold text-temer-light-gold leading-none">Temer</span>
+                <span className="text-sm font-medium text-gray-300 uppercase tracking-wider leading-none">PROPERTIES</span>
+              </div>
             </div>
             <p className="text-gray-400 mb-6">
               Your trusted partner in Ethiopian real estate since 2009
