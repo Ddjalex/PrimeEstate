@@ -1,7 +1,7 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertPropertySchema, insertPropertyImageSchema, insertUserSchema, insertWhatsAppSettingsSchema, type User } from "@shared/schema";
+import { insertPropertySchema, insertPropertyImageSchema, insertUserSchema, insertWhatsAppSettingsSchema, insertContactSettingsSchema, type User, type InsertContactSettings } from "@shared/schema";
 import * as bcrypt from "bcrypt";
 import multer from "multer";
 import path from "path";
@@ -414,6 +414,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error updating WhatsApp settings:', error);
       res.status(500).json({ error: 'Failed to update WhatsApp settings' });
+    }
+  });
+
+  // Contact Settings routes
+  // Public route to get current contact settings
+  app.get('/api/contact/settings', async (req: Request, res: Response) => {
+    try {
+      const settings = await storage.getContactSettings();
+      if (!settings) {
+        return res.status(404).json({ error: 'Contact settings not found' });
+      }
+      res.json(settings);
+    } catch (error) {
+      console.error('Error fetching contact settings:', error);
+      res.status(500).json({ error: 'Failed to fetch contact settings' });
+    }
+  });
+
+  // Protected admin route to update contact settings
+  app.put('/api/admin/contact/settings', adminAuth, async (req: Request, res: Response) => {
+    try {
+      const settingsData = insertContactSettingsSchema.parse(req.body);
+      const updatedSettings = await storage.updateContactSettings(settingsData);
+      
+      if (!updatedSettings) {
+        return res.status(400).json({ error: 'Failed to update contact settings' });
+      }
+      
+      res.json({
+        message: 'Contact settings updated successfully',
+        settings: updatedSettings
+      });
+    } catch (error) {
+      console.error('Error updating contact settings:', error);
+      res.status(500).json({ error: 'Failed to update contact settings' });
     }
   });
 

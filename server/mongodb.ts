@@ -87,12 +87,30 @@ whatsappSettingsSchema.pre('save', function(next) {
   next();
 });
 
+// Contact Settings Schema
+const contactSettingsSchema = new mongoose.Schema({
+  phone: { type: String, required: true, default: '+251 911 123 456' },
+  email: { type: String, required: true, default: 'info@temerproperties.com' },
+  address: { type: String, required: true, default: 'Bole Road, Addis Ababa, Ethiopia' },
+  isActive: { type: Boolean, default: true },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
+});
+
+contactSettingsSchema.plugin(autoIncrement, { field: 'id' });
+
+contactSettingsSchema.pre('save', function(next) {
+  this.updatedAt = new Date();
+  next();
+});
+
 // Export models
 export const UserModel = mongoose.model('User', userSchema);
 export const PropertyModel = mongoose.model('Property', propertySchema);
 export const PropertyImageModel = mongoose.model('PropertyImage', propertyImageSchema);
 export const SliderImageModel = mongoose.model('SliderImage', sliderImageSchema);
 export const WhatsAppSettingsModel = mongoose.model('WhatsAppSettings', whatsappSettingsSchema);
+export const ContactSettingsModel = mongoose.model('ContactSettings', contactSettingsSchema);
 
 // MongoDB connection
 export async function connectToMongoDB() {
@@ -111,6 +129,9 @@ export async function connectToMongoDB() {
     
     // Initialize WhatsApp settings
     await initializeWhatsAppSettings();
+    
+    // Initialize Contact settings
+    await initializeContactSettings();
   } catch (error) {
     console.error('MongoDB connection error:', error);
     throw error;
@@ -241,5 +262,27 @@ async function initializeWhatsAppSettings() {
     }
   } catch (error) {
     console.error('Error initializing WhatsApp settings:', error);
+  }
+}
+
+async function initializeContactSettings() {
+  try {
+    // Check if Contact settings already exist
+    const existingSettings = await ContactSettingsModel.countDocuments();
+    
+    if (existingSettings === 0) {
+      // Create default Contact settings
+      const defaultSettings = new ContactSettingsModel({
+        phone: '+251 911 123 456',
+        email: 'info@temerproperties.com',
+        address: 'Bole Road, Addis Ababa, Ethiopia',
+        isActive: true
+      });
+      
+      await defaultSettings.save();
+      console.log('Default Contact settings initialized');
+    }
+  } catch (error) {
+    console.error('Error initializing Contact settings:', error);
   }
 }

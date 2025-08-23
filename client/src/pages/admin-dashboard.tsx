@@ -89,6 +89,14 @@ export default function AdminDashboard() {
     generalInquiryTemplate: ""
   });
 
+  // Contact Settings form state
+  const [contactForm, setContactForm] = useState({
+    phone: "",
+    email: "",
+    address: "",
+    isActive: true
+  });
+
   // Check authentication
   useEffect(() => {
     const auth = sessionStorage.getItem("admin_auth");
@@ -121,6 +129,12 @@ export default function AdminDashboard() {
     queryFn: () => apiRequest("/api/whatsapp/settings"),
   });
 
+  // Fetch Contact settings
+  const { data: contactSettings, isLoading: isLoadingContact } = useQuery({
+    queryKey: ["/api/contact/settings"],
+    queryFn: () => apiRequest("/api/contact/settings"),
+  });
+
   // Initialize WhatsApp form when settings are loaded
   useEffect(() => {
     if (whatsappSettings) {
@@ -134,6 +148,18 @@ export default function AdminDashboard() {
       });
     }
   }, [whatsappSettings]);
+
+  // Initialize Contact form when settings are loaded
+  useEffect(() => {
+    if (contactSettings) {
+      setContactForm({
+        phone: contactSettings.phone || "",
+        email: contactSettings.email || "",
+        address: contactSettings.address || "",
+        isActive: contactSettings.isActive ?? true
+      });
+    }
+  }, [contactSettings]);
 
   // Calculate dashboard statistics
   const dashboardStats: DashboardStats = useMemo(() => {
@@ -372,6 +398,28 @@ export default function AdminDashboard() {
     },
   });
 
+  // Contact Settings mutation
+  const updateContactMutation = useMutation({
+    mutationFn: (data: any) =>
+      apiRequest("/api/admin/contact/settings", {
+        method: "PUT",
+        headers: getAuthHeaders(),
+        body: JSON.stringify(data),
+      }),
+    onSuccess: () => {
+      toast({ title: "Success", description: "Contact settings updated successfully" });
+      queryClient.invalidateQueries({ queryKey: ["/api/contact/settings"] });
+      queryClient.refetchQueries({ queryKey: ["/api/contact/settings"] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to update contact settings",
+        variant: "destructive",
+      });
+    },
+  });
+
   const resetForm = () => {
     setPropertyForm({
       title: "",
@@ -403,6 +451,12 @@ export default function AdminDashboard() {
   const handleUpdateWhatsAppSettings = (e: React.FormEvent) => {
     e.preventDefault();
     updateWhatsAppMutation.mutate(whatsappForm);
+  };
+
+  // Contact settings form handler
+  const handleUpdateContactSettings = (e: React.FormEvent) => {
+    e.preventDefault();
+    updateContactMutation.mutate(contactForm);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -613,7 +667,7 @@ export default function AdminDashboard() {
       {/* Main Content */}
       <div className="px-6 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-5 mb-8">
+          <TabsList className="grid w-full grid-cols-6 mb-8">
             <TabsTrigger value="overview" className="flex items-center space-x-2">
               <Home className="w-4 h-4" />
               <span>Overview</span>
@@ -629,6 +683,10 @@ export default function AdminDashboard() {
             <TabsTrigger value="whatsapp" className="flex items-center space-x-2">
               <i className="fab fa-whatsapp w-4 h-4"></i>
               <span>WhatsApp</span>
+            </TabsTrigger>
+            <TabsTrigger value="contact" className="flex items-center space-x-2">
+              <Phone className="w-4 h-4" />
+              <span>Contact</span>
             </TabsTrigger>
             <TabsTrigger value="analytics" className="flex items-center space-x-2">
               <TrendingUp className="w-4 h-4" />
@@ -1432,6 +1490,121 @@ export default function AdminDashboard() {
                       </Button>
                     </div>
                   </form>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          {/* Contact Settings Tab */}
+          <TabsContent value="contact" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
+              <Card className="border-0 shadow-lg">
+                <CardHeader className="border-b border-gray-100">
+                  <CardTitle className="text-xl font-bold text-gray-800 flex items-center">
+                    <Phone className="w-5 h-5 mr-2 text-temer-green" />
+                    Contact Information Settings
+                  </CardTitle>
+                  <p className="text-gray-600 mt-2">
+                    Manage your business contact information displayed on the website
+                  </p>
+                </CardHeader>
+                <CardContent className="p-6">
+                  {isLoadingContact ? (
+                    <div className="space-y-4">
+                      <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+                      <div className="h-4 bg-gray-200 rounded animate-pulse w-3/4"></div>
+                      <div className="h-4 bg-gray-200 rounded animate-pulse w-1/2"></div>
+                    </div>
+                  ) : (
+                    <form onSubmit={handleUpdateContactSettings} className="space-y-6">
+                      <div>
+                        <Label htmlFor="phone">Phone Number</Label>
+                        <Input
+                          id="phone"
+                          type="tel"
+                          placeholder="+251 911 123 456"
+                          value={contactForm.phone}
+                          onChange={(e) => setContactForm({ ...contactForm, phone: e.target.value })}
+                          className="mt-1"
+                          required
+                        />
+                        <p className="text-sm text-gray-500 mt-1">
+                          Enter the main business phone number for customer inquiries
+                        </p>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="email">Email Address</Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          placeholder="info@temerproperties.com"
+                          value={contactForm.email}
+                          onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
+                          className="mt-1"
+                          required
+                        />
+                        <p className="text-sm text-gray-500 mt-1">
+                          Business email address for general inquiries
+                        </p>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="address">Business Address</Label>
+                        <Textarea
+                          id="address"
+                          placeholder="Bole Road, Addis Ababa, Ethiopia"
+                          value={contactForm.address}
+                          onChange={(e) => setContactForm({ ...contactForm, address: e.target.value })}
+                          className="mt-1"
+                          rows={3}
+                          required
+                        />
+                        <p className="text-sm text-gray-500 mt-1">
+                          Physical address of your main business location
+                        </p>
+                      </div>
+
+                      <div className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          id="contactActive"
+                          checked={contactForm.isActive}
+                          onChange={(e) => setContactForm({ ...contactForm, isActive: e.target.checked })}
+                          className="rounded border-gray-300"
+                        />
+                        <Label htmlFor="contactActive" className="text-sm font-medium">
+                          Display contact information on website
+                        </Label>
+                      </div>
+
+                      <div className="flex justify-end space-x-4 pt-4 border-t border-gray-200">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => {
+                            if (contactSettings) {
+                              setContactForm({
+                                phone: contactSettings.phone || "",
+                                email: contactSettings.email || "",
+                                address: contactSettings.address || "",
+                                isActive: contactSettings.isActive ?? true
+                              });
+                            }
+                          }}
+                        >
+                          Reset
+                        </Button>
+                        <Button
+                          type="submit"
+                          className="bg-temer-green hover:bg-temer-dark-green text-white"
+                          disabled={updateContactMutation.isPending}
+                        >
+                          {updateContactMutation.isPending ? "Updating..." : "Update Contact Info"}
+                        </Button>
+                      </div>
+                    </form>
+                  )}
                 </CardContent>
               </Card>
             </div>

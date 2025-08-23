@@ -75,6 +75,23 @@ export const insertWhatsAppSettingsSchema = createInsertSchema(whatsappSettings)
   updatedAt: true,
 });
 
+// Contact Information table
+export const contactSettings = pgTable("contact_settings", {
+  id: serial("id").primaryKey(),
+  phone: text("phone").notNull().default("+251 911 123 456"),
+  email: text("email").notNull().default("info@temerproperties.com"),
+  address: text("address").notNull().default("Bole Road, Addis Ababa, Ethiopia"),
+  isActive: boolean("is_active").default(true).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const insertContactSettingsSchema = createInsertSchema(contactSettings).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 // Types - Override ID types to use string for MongoDB compatibility
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = Omit<typeof users.$inferSelect, 'id'> & { id: string };
@@ -84,3 +101,5 @@ export type PropertyImage = Omit<typeof propertyImages.$inferSelect, 'id' | 'pro
 export type InsertPropertyImage = Omit<z.infer<typeof insertPropertyImageSchema>, 'propertyId'> & { propertyId: string };
 export type WhatsAppSettings = Omit<typeof whatsappSettings.$inferSelect, 'id'> & { id: string };
 export type InsertWhatsAppSettings = z.infer<typeof insertWhatsAppSettingsSchema>;
+export type ContactSettings = Omit<typeof contactSettings.$inferSelect, 'id'> & { id: string };
+export type InsertContactSettings = z.infer<typeof insertContactSettingsSchema>;

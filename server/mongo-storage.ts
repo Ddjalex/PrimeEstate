@@ -6,10 +6,12 @@ import {
   type PropertyImage,
   type InsertPropertyImage,
   type WhatsAppSettings,
-  type InsertWhatsAppSettings
+  type InsertWhatsAppSettings,
+  type ContactSettings,
+  type InsertContactSettings
 } from "@shared/schema";
 import { IStorage } from "./storage";
-import { UserModel, PropertyModel, PropertyImageModel, SliderImageModel, WhatsAppSettingsModel } from "./mongodb";
+import { UserModel, PropertyModel, PropertyImageModel, SliderImageModel, WhatsAppSettingsModel, ContactSettingsModel } from "./mongodb";
 import mongoose from "mongoose";
 
 export class MongoStorage implements IStorage {
@@ -203,6 +205,21 @@ export class MongoStorage implements IStorage {
     return settings ? this.convertMongoWhatsAppSettings(settings) : undefined;
   }
 
+  // Contact settings operations
+  async getContactSettings(): Promise<ContactSettings | undefined> {
+    const settings = await ContactSettingsModel.findOne().lean();
+    return settings ? this.convertMongoContactSettings(settings) : undefined;
+  }
+
+  async updateContactSettings(updates: Partial<InsertContactSettings>): Promise<ContactSettings | undefined> {
+    const settings = await ContactSettingsModel.findOneAndUpdate(
+      {}, // Update the first (and only) document
+      { ...updates, updatedAt: new Date() },
+      { new: true, upsert: true } // Create if doesn't exist
+    ).lean();
+    return settings ? this.convertMongoContactSettings(settings) : undefined;
+  }
+
   // Helper methods to convert MongoDB documents to our types
   private convertMongoUser(mongoUser: any): User {
     return {
@@ -253,6 +270,18 @@ export class MongoStorage implements IStorage {
       welcomeMessage: mongoSettings.welcomeMessage,
       propertyInquiryTemplate: mongoSettings.propertyInquiryTemplate,
       generalInquiryTemplate: mongoSettings.generalInquiryTemplate,
+      createdAt: mongoSettings.createdAt,
+      updatedAt: mongoSettings.updatedAt
+    };
+  }
+
+  private convertMongoContactSettings(mongoSettings: any): ContactSettings {
+    return {
+      id: String(mongoSettings._id),
+      phone: mongoSettings.phone,
+      email: mongoSettings.email,
+      address: mongoSettings.address,
+      isActive: mongoSettings.isActive,
       createdAt: mongoSettings.createdAt,
       updatedAt: mongoSettings.updatedAt
     };

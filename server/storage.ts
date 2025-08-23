@@ -6,7 +6,9 @@ import {
   type PropertyImage,
   type InsertPropertyImage,
   type WhatsAppSettings,
-  type InsertWhatsAppSettings
+  type InsertWhatsAppSettings,
+  type ContactSettings,
+  type InsertContactSettings
 } from "@shared/schema";
 
 export interface IStorage {
@@ -37,6 +39,10 @@ export interface IStorage {
   // WhatsApp settings operations
   getWhatsAppSettings(): Promise<WhatsAppSettings | undefined>;
   updateWhatsAppSettings(settings: Partial<InsertWhatsAppSettings>): Promise<WhatsAppSettings | undefined>;
+  
+  // Contact settings operations
+  getContactSettings(): Promise<ContactSettings | undefined>;
+  updateContactSettings(settings: Partial<InsertContactSettings>): Promise<ContactSettings | undefined>;
 }
 
 export class MemStorage implements IStorage {
@@ -45,6 +51,7 @@ export class MemStorage implements IStorage {
   private propertyImages: PropertyImage[] = [];
   private sliderImages: { id: number; imageUrl: string; title: string; description: string; isActive: boolean }[] = [];
   private whatsappSettings: WhatsAppSettings | null = null;
+  private contactSettings: ContactSettings | null = null;
   private nextUserId = 1;
   private nextPropertyId = 1;
   private nextPropertyImageId = 1;
@@ -338,6 +345,39 @@ export class MemStorage implements IStorage {
     }
     
     return this.whatsappSettings;
+  }
+
+  // Contact settings operations
+  async getContactSettings(): Promise<ContactSettings | undefined> {
+    if (!this.contactSettings) {
+      // Initialize default settings
+      this.contactSettings = {
+        id: '1',
+        phone: '+251 911 123 456',
+        email: 'info@temerproperties.com',
+        address: 'Bole Road, Addis Ababa, Ethiopia',
+        isActive: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+    }
+    return this.contactSettings;
+  }
+
+  async updateContactSettings(updates: Partial<InsertContactSettings>): Promise<ContactSettings | undefined> {
+    if (!this.contactSettings) {
+      await this.getContactSettings(); // Initialize if not exists
+    }
+    
+    if (this.contactSettings) {
+      this.contactSettings = {
+        ...this.contactSettings,
+        ...updates,
+        updatedAt: new Date()
+      };
+    }
+    
+    return this.contactSettings;
   }
 }
 

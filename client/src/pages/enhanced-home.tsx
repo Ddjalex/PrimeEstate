@@ -46,6 +46,12 @@ export function HomePage({ propertyId }: HomePageProps = {}) {
     queryFn: () => apiRequest("/api/whatsapp/settings"),
   });
 
+  // Fetch Contact settings
+  const { data: contactSettings } = useQuery({
+    queryKey: ["/api/contact/settings"],
+    queryFn: () => apiRequest("/api/contact/settings"),
+  });
+
   // Handle property deep linking
   useEffect(() => {
     if (propertyId && properties.length > 0) {
@@ -376,15 +382,15 @@ export function HomePage({ propertyId }: HomePageProps = {}) {
                 <div className="space-y-4">
                   <div className="flex items-center">
                     <Phone className="h-5 w-5 text-temer-green mr-3" />
-                    <span>+251 911 123 456</span>
+                    <span>{contactSettings?.phone || '+251 911 123 456'}</span>
                   </div>
                   <div className="flex items-center">
                     <Mail className="h-5 w-5 text-temer-green mr-3" />
-                    <span>info@temerproperties.com</span>
+                    <span>{contactSettings?.email || 'info@temerproperties.com'}</span>
                   </div>
                   <div className="flex items-start">
                     <LocationIcon className="h-5 w-5 text-temer-green mr-3 mt-1" />
-                    <span>Bole Road, Addis Ababa, Ethiopia</span>
+                    <span>{contactSettings?.address || 'Bole Road, Addis Ababa, Ethiopia'}</span>
                   </div>
                 </div>
               </div>
