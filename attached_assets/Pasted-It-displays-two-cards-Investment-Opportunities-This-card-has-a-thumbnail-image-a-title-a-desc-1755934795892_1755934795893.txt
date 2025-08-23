@@ -1,0 +1,37 @@
+It displays two cards:
+
+"Investment Opportunities": This card has a thumbnail image, a title, a description, and an "Active" status label.
+
+"Modern Living Place": This card has a title and a description but a blank, gray thumbnail. It also has an "Active" status label.
+
+A possible issue is that the thumbnail for "Modern Living Place" is missing. This is a common occurrence if an image failed to upload or was never selected.
+
+To get the best help from a Replit AI agent, you need to describe the problem you are experiencing, as the image itself doesn't explicitly state an error.
+
+Best Ways to Describe the "Error" to a Replit AI Agent
+Here are a few ways to describe the situation, depending on what you believe the problem is:
+
+1. Describing a Missing Image (Most Likely Scenario)
+
+"I'm working on a website's image slider. I uploaded an image for the 'Modern Living Place' section, but it's not showing up. Instead, there's a gray, blank space where the image should be. The card for 'Investment Opportunities' displays its image correctly. I need help figuring out why the image for 'Modern Living Place' isn't appearing."
+
+2. Describing a Failed Upload
+
+"I'm trying to upload an image for my website's slider, but the upload process seems to fail. After I select an image and click 'Add Slider Image', a new card is created, but the image area is just a blank, gray box. I've tried multiple times, and the same thing happens. Can you help me troubleshoot why the images aren't uploading correctly?"
+
+3. Describing a Display or Rendering Issue
+
+"I'm seeing a display issue on my website's admin dashboard. I have a slider image called 'Modern Living Place' that should be visible, but the image thumbnail is just a blank gray box. I've confirmed that the image file exists and is linked correctly in the database. Why isn't this specific image rendering on the page?"
+
+What to Include in Your Description
+To help the AI agent, be sure to provide as much context as possible:
+
+What you were trying to do: "I was trying to add a new slider image."
+
+What you expected to happen: "I expected the new image to show up in the card's thumbnail."
+
+What actually happened: "The image area is a blank gray box."
+
+The technology stack: "This is a web application. The front-end uses HTML/CSS/JavaScript, and the back-end is [e.g., Node.js, Python, PHP]."
+
+The relevant code (if you have it): "Here is the code I'm using to handle the image upload..."

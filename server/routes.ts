@@ -52,7 +52,8 @@ const adminAuth = async (req: Request, res: Response, next: Function) => {
 // Configure multer for file uploads
 const storage_multer = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadPath = req.baseUrl.includes('slider') ? 'uploads/slider' : 'uploads/properties';
+    // Check the actual URL path to determine upload type
+    const uploadPath = req.originalUrl.includes('/slider') ? 'uploads/slider' : 'uploads/properties';
     
     // Ensure directory exists
     if (!fs.existsSync(uploadPath)) {
