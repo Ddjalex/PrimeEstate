@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { ImageSlider } from "@/components/ui/image-slider";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Property } from "@shared/schema";
 import { contactViaWhatsApp } from "@/lib/whatsapp";
 
@@ -19,7 +19,11 @@ interface SliderImage {
   isActive: boolean;
 }
 
-export function HomePage() {
+interface HomePageProps {
+  propertyId?: string;
+}
+
+export function HomePage({ propertyId }: HomePageProps = {}) {
   const [searchFilters, setSearchFilters] = useState({
     location: "",
     propertyType: "",
@@ -34,6 +38,28 @@ export function HomePage() {
   const { data: sliderImages = [], isLoading: isLoadingSlider } = useQuery<SliderImage[]>({
     queryKey: ['/api/slider']
   });
+
+  // Handle property deep linking
+  useEffect(() => {
+    if (propertyId && properties.length > 0) {
+      const property = properties.find(p => p.id === propertyId);
+      if (property) {
+        setSelectedProperty(property);
+      }
+    }
+  }, [propertyId, properties]);
+
+  // Listen for custom modal open events
+  useEffect(() => {
+    const handleOpenModal = (event: CustomEvent) => {
+      setSelectedProperty(event.detail.property);
+    };
+
+    window.addEventListener('openPropertyModal', handleOpenModal as EventListener);
+    return () => {
+      window.removeEventListener('openPropertyModal', handleOpenModal as EventListener);
+    };
+  }, []);
 
   const formatPrice = (size: number) => {
     return `${size.toLocaleString()} sqm`;
@@ -234,7 +260,7 @@ export function HomePage() {
                         {formatPrice(property.size || 0)}
                       </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-3 gap-2">
                       <Button 
                         className="bg-temer-green hover:bg-temer-dark-green text-white font-semibold" 
                         data-testid={`button-view-${property.id}`}
@@ -250,12 +276,22 @@ export function HomePage() {
                           location: property.location,
                           bedrooms: property.bedrooms,
                           bathrooms: property.bathrooms,
-                          size: property.size
+                          size: property.size,
+                          id: property.id
                         })}
                         data-testid={`button-whatsapp-${property.id}`}
                       >
                         <MessageCircle className="w-4 h-4 mr-1" />
                         WhatsApp
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        className="border-blue-500 text-blue-600 hover:bg-blue-500 hover:text-white font-semibold"
+                        onClick={() => window.open('tel:+251975666699')}
+                        data-testid={`button-call-${property.id}`}
+                      >
+                        <Phone className="w-4 h-4 mr-1" />
+                        Call
                       </Button>
                     </div>
                   </CardContent>

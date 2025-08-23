@@ -9,6 +9,7 @@ interface PropertyDetails {
   bathrooms?: number;
   size: number;
   price?: string;
+  id?: string;
 }
 
 interface WhatsAppSettings {
@@ -80,6 +81,13 @@ export async function generatePropertyWhatsAppUrl(property: PropertyDetails): Pr
     
   if (property.price) {
     message += `\n💰 Price: ${property.price}`;
+  }
+
+  // Add property link if ID is available
+  if (property.id) {
+    const currentDomain = window.location.origin;
+    const propertyUrl = `${currentDomain}/property/${property.id}`;
+    message += `\n\n🔗 View Property: ${propertyUrl}`;
   }
 
   const encodedMessage = encodeURIComponent(message);

@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Home from "@/pages/home";
 import EnhancedHome from "@/pages/enhanced-home";
+import PropertyPage from "@/pages/property-page";
 import NotFound from "@/pages/not-found";
 import AdminLogin from "@/pages/admin-login";
 import AdminRegister from "@/pages/admin-register";
@@ -16,6 +17,7 @@ function Router() {
     <Switch>
       <Route path="/" component={EnhancedHome} />
       <Route path="/home" component={Home} />
+      <Route path="/property/:id" component={PropertyPage} />
       <Route path="/admin" component={() => { window.location.href = "/admin/dashboard"; return null; }} />
       <Route path="/admin/login" component={AdminLogin} />
       <Route path="/admin/register" component={AdminRegister} />
