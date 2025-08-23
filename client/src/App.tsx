@@ -9,6 +9,7 @@ import NotFound from "@/pages/not-found";
 import AdminLogin from "@/pages/admin-login";
 import AdminRegister from "@/pages/admin-register";
 import AdminDashboard from "@/pages/admin-dashboard";
+import PropertyPage from "@/pages/property-page";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
 
 function Router() {
@@ -16,6 +17,9 @@ function Router() {
     <Switch>
       <Route path="/" component={EnhancedHome} />
       <Route path="/home" component={Home} />
+      <Route path="/property/:id">
+        {({ params }: any) => <PropertyPage {...params} />}
+      </Route>
       <Route path="/admin" component={() => { window.location.href = "/admin/dashboard"; return null; }} />
       <Route path="/admin/login" component={AdminLogin} />
       <Route path="/admin/register" component={AdminRegister} />
