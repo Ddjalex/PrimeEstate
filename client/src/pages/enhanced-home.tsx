@@ -1,4 +1,4 @@
-import { Search, MapPin, Bed, Bath, Square, Phone, Mail, MapPin as LocationIcon, Star, Users, Building, Award, MessageCircle } from "lucide-react";
+import { Search, MapPin, Bed, Bath, Square, Phone, Mail, MapPin as LocationIcon, Star, Users, Building, Award, MessageCircle, X, Calendar, Home as HomeIcon } from "lucide-react";
 import temerLogo from '@assets/images (2)_1755853378467.jpg';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,6 +25,7 @@ export function HomePage() {
     propertyType: "",
     priceRange: ""
   });
+  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
 
   const { data: properties = [], isLoading } = useQuery<Property[]>({
     queryKey: ['/api/properties']
@@ -234,13 +235,17 @@ export function HomePage() {
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-2">
-                      <Button className="bg-temer-green hover:bg-temer-dark-green text-white font-semibold" data-testid={`button-view-${property.id}`}>
+                      <Button 
+                        className="bg-temer-green hover:bg-temer-dark-green text-white font-semibold" 
+                        data-testid={`button-view-${property.id}`}
+                        onClick={() => setSelectedProperty(property)}
+                      >
                         View Details
                       </Button>
                       <Button 
                         variant="outline" 
                         className="border-green-500 text-green-600 hover:bg-green-500 hover:text-white font-semibold"
-                        onClick={() => contactViaWhatsApp({
+                        onClick={async () => await contactViaWhatsApp({
                           title: property.title,
                           location: property.location,
                           bedrooms: property.bedrooms,
@@ -399,6 +404,157 @@ export function HomePage() {
           </div>
         </div>
       </footer>
+
+      {/* Property Details Modal */}
+      {selectedProperty && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+            {/* Modal Header */}
+            <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-start">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">{selectedProperty.title}</h2>
+                <div className="flex items-center text-gray-600">
+                  <MapPin className="w-4 h-4 mr-1" />
+                  <span>{selectedProperty.location}</span>
+                </div>
+              </div>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setSelectedProperty(null)}
+                className="rounded-full p-2"
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6 space-y-6">
+              {/* Property Images */}
+              {selectedProperty.imageUrls && selectedProperty.imageUrls.length > 0 && (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {selectedProperty.imageUrls.slice(0, 6).map((imageUrl: string, index: number) => (
+                    <div key={index} className="aspect-video rounded-lg overflow-hidden bg-gray-100">
+                      <img 
+                        src={imageUrl} 
+                        alt={`${selectedProperty.title} - Image ${index + 1}`}
+                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = '/api/placeholder/400/300';
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Property Specifications */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <Card className="text-center p-4">
+                  <Bed className="w-8 h-8 text-temer-green mx-auto mb-2" />
+                  <p className="text-2xl font-bold text-gray-900">{selectedProperty.bedrooms || 0}</p>
+                  <p className="text-gray-600 text-sm">Bedrooms</p>
+                </Card>
+                <Card className="text-center p-4">
+                  <Bath className="w-8 h-8 text-temer-green mx-auto mb-2" />
+                  <p className="text-2xl font-bold text-gray-900">{selectedProperty.bathrooms || 0}</p>
+                  <p className="text-gray-600 text-sm">Bathrooms</p>
+                </Card>
+                <Card className="text-center p-4">
+                  <Square className="w-8 h-8 text-temer-green mx-auto mb-2" />
+                  <p className="text-2xl font-bold text-gray-900">{selectedProperty.size}</p>
+                  <p className="text-gray-600 text-sm">Square Meters</p>
+                </Card>
+                <Card className="text-center p-4">
+                  <HomeIcon className="w-8 h-8 text-temer-green mx-auto mb-2" />
+                  <p className="text-lg font-bold text-gray-900">{selectedProperty.propertyType}</p>
+                  <p className="text-gray-600 text-sm">Property Type</p>
+                </Card>
+              </div>
+
+              {/* Property Description */}
+              <Card className="p-6">
+                <h3 className="text-xl font-semibold mb-4">Property Description</h3>
+                <p className="text-gray-700 leading-relaxed">{selectedProperty.description}</p>
+              </Card>
+
+              {/* Property Status */}
+              {selectedProperty.status && selectedProperty.status.length > 0 && (
+                <Card className="p-6">
+                  <h3 className="text-xl font-semibold mb-4">Property Status</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedProperty.status.map((status: string, index: number) => (
+                      <Badge 
+                        key={index} 
+                        className="bg-temer-green/10 text-temer-green border-temer-green/20"
+                      >
+                        {status}
+                      </Badge>
+                    ))}
+                  </div>
+                </Card>
+              )}
+
+              {/* Property Details */}
+              <Card className="p-6">
+                <h3 className="text-xl font-semibold mb-4">Additional Details</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="flex items-center">
+                    <Calendar className="w-5 h-5 text-temer-green mr-3" />
+                    <div>
+                      <p className="font-medium">Listed Date</p>
+                      <p className="text-gray-600">
+                        {new Date(selectedProperty.createdAt).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        })}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center">
+                    <Building className="w-5 h-5 text-temer-green mr-3" />
+                    <div>
+                      <p className="font-medium">Property ID</p>
+                      <p className="text-gray-600">{selectedProperty.id}</p>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200">
+                <Button 
+                  className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold"
+                  onClick={async () => await contactViaWhatsApp({
+                    title: selectedProperty.title,
+                    location: selectedProperty.location,
+                    bedrooms: selectedProperty.bedrooms,
+                    bathrooms: selectedProperty.bathrooms,
+                    size: selectedProperty.size
+                  })}
+                >
+                  <MessageCircle className="w-4 h-4 mr-2" />
+                  Contact via WhatsApp
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="flex-1 border-temer-green text-temer-green hover:bg-temer-green hover:text-white"
+                  onClick={() => {
+                    // Scroll to contact section and close modal
+                    setSelectedProperty(null);
+                    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
+                  <Phone className="w-4 h-4 mr-2" />
+                  Schedule Visit
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
