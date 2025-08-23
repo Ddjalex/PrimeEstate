@@ -503,9 +503,6 @@ export default function AdminDashboard() {
   useEffect(() => {
     if (editingSlider && editingSlider.imageUrl) {
       setSliderImageFiles([editingSlider.imageUrl]);
-    } else if (!editingSlider) {
-      // Clear files when not editing (adding new slider)
-      setSliderImageFiles([]);
     }
   }, [editingSlider]);
 
@@ -513,9 +510,29 @@ export default function AdminDashboard() {
   const handleSliderSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Validate required fields
+    if (!sliderForm.title.trim()) {
+      toast({
+        title: "Validation Error",
+        description: "Please enter a title for the slider image",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (!sliderImageFiles[0] && !sliderForm.imageUrl) {
+      toast({
+        title: "Validation Error", 
+        description: "Please upload an image for the slider",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     const formData = {
       ...sliderForm,
-      imageUrl: sliderImageFiles[0] || sliderForm.imageUrl
+      imageUrl: sliderImageFiles[0] || sliderForm.imageUrl,
+      isActive: true
     };
     
     if (editingSlider) {
