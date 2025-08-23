@@ -449,6 +449,18 @@ export function HomePage({ propertyId }: HomePageProps = {}) {
             </div>
             <div className="border-t border-gray-800 pt-6 text-center text-gray-400">
               <p>&copy; 2025 Temer Properties. All rights reserved.</p>
+              <p className="mt-2 text-sm">
+                Created by{' '}
+                <a 
+                  href="https://t.me/Ethioads012" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-temer-light-gold hover:text-white transition-colors duration-200 font-medium"
+                >
+                  @Ethioads012
+                </a>
+                {' '}• Website Development Services
+              </p>
             </div>
           </div>
         </div>
