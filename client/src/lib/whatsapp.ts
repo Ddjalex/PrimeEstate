@@ -132,6 +132,47 @@ export async function contactGeneralWhatsApp(): Promise<void> {
 }
 
 /**
+ * Generate WhatsApp URL for contact form messages
+ */
+export async function generateContactFormWhatsAppUrl(contactData: {
+  name: string;
+  email: string;
+  phone: string;
+  message: string;
+}): Promise<string> {
+  const settings = await getWhatsAppSettings();
+  
+  let customMessage = `Hello Temer Properties! 👋\n\n`;
+  customMessage += `My name is *${contactData.name}* and I would like to get in touch with you.\n\n`;
+  customMessage += `📧 Email: ${contactData.email}\n`;
+  customMessage += `📱 Phone: ${contactData.phone}\n\n`;
+  customMessage += `💬 Message:\n${contactData.message}\n\n`;
+  customMessage += `Thank you for your time and I look forward to hearing from you!`;
+
+  const encodedMessage = encodeURIComponent(customMessage);
+  return `https://wa.me/${settings.phoneNumber.replace('+', '')}?text=${encodedMessage}`;
+}
+
+/**
+ * Open WhatsApp with contact form data
+ */
+export async function contactViaContactForm(contactData: {
+  name: string;
+  email: string;
+  phone: string;
+  message: string;
+}): Promise<void> {
+  try {
+    const url = await generateContactFormWhatsAppUrl(contactData);
+    window.open(url, '_blank');
+  } catch (error) {
+    console.error('Failed to open WhatsApp:', error);
+    // Fallback: show error or use default number
+    alert('Unable to open WhatsApp. Please contact us directly at +251975666699');
+  }
+}
+
+/**
  * Clear cached settings (useful when admin updates settings)
  */
 export function clearWhatsAppCache(): void {

@@ -8,8 +8,9 @@ import { Badge } from "@/components/ui/badge";
 import { ImageSlider } from "@/components/ui/image-slider";
 import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
 import type { Property } from "@shared/schema";
-import { contactViaWhatsApp } from "@/lib/whatsapp";
+import { contactViaWhatsApp, contactViaContactForm } from "@/lib/whatsapp";
 import { apiRequest } from "@/lib/queryClient";
 
 interface SliderImage {
@@ -31,6 +32,14 @@ export function HomePage({ propertyId }: HomePageProps = {}) {
     priceRange: ""
   });
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
+  const [contactForm, setContactForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    message: ''
+  });
+  const [isSubmittingContact, setIsSubmittingContact] = useState(false);
+  const { toast } = useToast();
 
   const { data: properties = [], isLoading } = useQuery<Property[]>({
     queryKey: ['/api/properties']
@@ -398,19 +407,110 @@ export function HomePage({ propertyId }: HomePageProps = {}) {
                   <CardTitle>Send Us a Message</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <form className="space-y-4">
+                  <form className="space-y-4" onSubmit={async (e) => {
+                    e.preventDefault();
+                    
+                    // Basic validation
+                    if (!contactForm.name.trim()) {
+                      toast({ title: "Please enter your name", variant: "destructive" });
+                      return;
+                    }
+                    if (!contactForm.email.trim()) {
+                      toast({ title: "Please enter your email", variant: "destructive" });
+                      return;
+                    }
+                    if (!contactForm.phone.trim()) {
+                      toast({ title: "Please enter your phone number", variant: "destructive" });
+                      return;
+                    }
+                    if (!contactForm.message.trim()) {
+                      toast({ title: "Please enter your message", variant: "destructive" });
+                      return;
+                    }
+                    
+                    // Email validation
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(contactForm.email)) {
+                      toast({ title: "Please enter a valid email address", variant: "destructive" });
+                      return;
+                    }
+                    
+                    setIsSubmittingContact(true);
+                    
+                    try {
+                      await contactViaContactForm(contactForm);
+                      toast({ 
+                        title: "Message sent!", 
+                        description: "We've opened WhatsApp with your message. Please complete sending it through WhatsApp." 
+                      });
+                      
+                      // Reset form
+                      setContactForm({
+                        name: '',
+                        email: '',
+                        phone: '',
+                        message: ''
+                      });
+                    } catch (error) {
+                      console.error('Failed to send message:', error);
+                      toast({ 
+                        title: "Error", 
+                        description: "Failed to open WhatsApp. Please try again or contact us directly.",
+                        variant: "destructive" 
+                      });
+                    } finally {
+                      setIsSubmittingContact(false);
+                    }
+                  }}>
                     <div className="grid md:grid-cols-2 gap-4">
-                      <Input placeholder="Your Name" data-testid="input-contact-name" />
-                      <Input type="email" placeholder="Your Email" data-testid="input-contact-email" />
+                      <Input 
+                        placeholder="Your Name" 
+                        value={contactForm.name}
+                        onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
+                        data-testid="input-contact-name" 
+                        required
+                      />
+                      <Input 
+                        type="email" 
+                        placeholder="Your Email" 
+                        value={contactForm.email}
+                        onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
+                        data-testid="input-contact-email" 
+                        required
+                      />
                     </div>
-                    <Input placeholder="Phone Number" data-testid="input-contact-phone" />
+                    <Input 
+                      placeholder="Phone Number" 
+                      value={contactForm.phone}
+                      onChange={(e) => setContactForm({ ...contactForm, phone: e.target.value })}
+                      data-testid="input-contact-phone" 
+                      required
+                    />
                     <textarea
                       className="w-full min-h-[120px] p-3 border border-gray-200 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-temer-green focus:border-temer-green transition-colors"
                       placeholder="Your Message"
+                      value={contactForm.message}
+                      onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
                       data-testid="textarea-contact-message"
+                      required
                     />
-                    <Button className="w-full bg-temer-green hover:bg-temer-dark-green text-white font-semibold" data-testid="button-send-message">
-                      Send Message
+                    <Button 
+                      type="submit"
+                      className="w-full bg-temer-green hover:bg-temer-dark-green text-white font-semibold" 
+                      data-testid="button-send-message"
+                      disabled={isSubmittingContact}
+                    >
+                      {isSubmittingContact ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                          Sending...
+                        </>
+                      ) : (
+                        <>
+                          <MessageCircle className="w-4 h-4 mr-2" />
+                          Send Message
+                        </>
+                      )}
                     </Button>
                   </form>
                 </CardContent>
