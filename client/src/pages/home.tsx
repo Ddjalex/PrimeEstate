@@ -8,10 +8,18 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { contactViaWhatsApp } from "@/lib/whatsapp";
+import { useQuery } from '@tanstack/react-query';
+import { apiRequest } from '@/lib/queryClient';
 
 export default function Home() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { toast } = useToast();
+
+  // Fetch WhatsApp settings for phone number
+  const { data: whatsappSettings } = useQuery({
+    queryKey: ["/api/whatsapp/settings"],
+    queryFn: () => apiRequest("/api/whatsapp/settings"),
+  });
 
   // Property search form state
   const [searchForm, setSearchForm] = useState({
@@ -456,7 +464,7 @@ export default function Home() {
                       <Button 
                         size="sm"
                         className="bg-temer-green text-white hover:bg-temer-dark-green"
-                        onClick={() => window.open('tel:+251975666699')}
+                        onClick={() => window.open(`tel:${whatsappSettings?.phoneNumber || '+251975666699'}`)}
                         data-testid={`property-call-${index}`}
                       >
                         Call

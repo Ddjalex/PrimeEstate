@@ -1007,7 +1007,7 @@ export default function AdminDashboard() {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => window.open('tel:+251975666699')}
+                          onClick={() => window.open(`tel:${whatsappSettings?.phoneNumber || '+251975666699'}`)}
                           className="border-blue-500 text-blue-600 hover:bg-blue-500 hover:text-white"
                           data-testid={`button-call-admin-${property.id}`}
                         >
@@ -1312,7 +1312,7 @@ export default function AdminDashboard() {
                   <form onSubmit={handleUpdateWhatsAppSettings} className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="phoneNumber">WhatsApp Phone Number *</Label>
+                        <Label htmlFor="phoneNumber">Company Phone Number *</Label>
                         <Input
                           id="phoneNumber"
                           type="tel"
@@ -1322,7 +1322,9 @@ export default function AdminDashboard() {
                           className="mt-1"
                           required
                         />
-                        <p className="text-xs text-gray-500 mt-1">Include country code (e.g., +251975666699)</p>
+                        <p className="text-xs text-gray-600 mt-1">
+                          Used for both WhatsApp messages and direct phone calls on the website. Include country code (e.g., +251975666699)
+                        </p>
                       </div>
                       <div>
                         <Label htmlFor="businessName">Business Name *</Label>

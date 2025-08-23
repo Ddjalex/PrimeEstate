@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import type { Property } from "@shared/schema";
 import { contactViaWhatsApp } from "@/lib/whatsapp";
+import { apiRequest } from "@/lib/queryClient";
 
 interface SliderImage {
   id: number;
@@ -37,6 +38,12 @@ export function HomePage({ propertyId }: HomePageProps = {}) {
 
   const { data: sliderImages = [], isLoading: isLoadingSlider } = useQuery<SliderImage[]>({
     queryKey: ['/api/slider']
+  });
+
+  // Fetch WhatsApp settings for phone number
+  const { data: whatsappSettings } = useQuery({
+    queryKey: ["/api/whatsapp/settings"],
+    queryFn: () => apiRequest("/api/whatsapp/settings"),
   });
 
   // Handle property deep linking
@@ -287,7 +294,7 @@ export function HomePage({ propertyId }: HomePageProps = {}) {
                       <Button 
                         variant="outline" 
                         className="border-blue-500 text-blue-600 hover:bg-blue-500 hover:text-white font-semibold"
-                        onClick={() => window.open('tel:+251975666699')}
+                        onClick={() => window.open(`tel:${whatsappSettings?.phoneNumber || '+251975666699'}`)}
                         data-testid={`button-call-${property.id}`}
                       >
                         <Phone className="w-4 h-4 mr-1" />
