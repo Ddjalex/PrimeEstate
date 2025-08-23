@@ -106,9 +106,6 @@ export function HomePage({ propertyId }: HomePageProps = {}) {
             <a href="#properties" className="text-gray-700 hover:text-temer-green font-medium transition-colors">Properties</a>
             <a href="#about" className="text-gray-700 hover:text-temer-green font-medium transition-colors">About</a>
             <a href="#contact" className="text-gray-700 hover:text-temer-green font-medium transition-colors">Contact</a>
-            <Button className="bg-temer-green hover:bg-temer-dark-green text-white font-semibold">
-              Admin Login
-            </Button>
           </div>
         </div>
       </nav>
