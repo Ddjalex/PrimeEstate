@@ -218,7 +218,7 @@ export function HomePage({ propertyId }: HomePageProps = {}) {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[1, 2, 3, 4, 5, 6].map((i) => (
                 <Card key={i} className="animate-pulse">
-                  <div className="h-48 bg-gray-200 rounded-t-lg" />
+                  <div className="aspect-[4/3] bg-gray-200 rounded-t-lg" />
                   <CardContent className="p-4">
                     <div className="h-4 bg-gray-200 rounded mb-2" />
                     <div className="h-4 bg-gray-200 rounded w-2/3 mb-4" />
@@ -234,7 +234,7 @@ export function HomePage({ propertyId }: HomePageProps = {}) {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {properties.slice(0, 6).map((property) => (
                 <Card key={property.id} className="overflow-hidden hover:shadow-lg transition-shadow group" data-testid={`card-property-${property.id}`}>
-                  <div className="relative h-48 overflow-hidden">
+                  <div className="relative aspect-[4/3] overflow-hidden">
                     <img
                       src={property.imageUrls?.[0] || 'https://images.unsplash.com/photo-1560184897-ae75f418493e?w=400'}
                       alt={property.title}
