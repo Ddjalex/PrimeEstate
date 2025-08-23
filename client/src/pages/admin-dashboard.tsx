@@ -28,7 +28,8 @@ import {
   Search,
   Filter,
   Download,
-  MoreHorizontal
+  MoreHorizontal,
+  Phone
 } from 'lucide-react';
 import type { Property, PropertyImage } from "@shared/schema";
 import { contactViaWhatsApp } from "@/lib/whatsapp";
