@@ -7,6 +7,8 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import { WebSocketServer } from "ws";
+import { whatsappService } from "./whatsapp-service";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -458,13 +460,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const contactData = insertContactMessageSchema.parse(req.body);
       const savedMessage = await storage.createContactMessage(contactData);
       
-      // TODO: Here you can add WhatsApp API integration to send the message
-      // For now, we'll just save to database and return success
       console.log('New contact message received:', savedMessage);
+      
+      // Get WhatsApp settings to get company phone number
+      const whatsappSettings = await storage.getWhatsAppSettings();
+      const companyPhoneNumber = whatsappSettings?.phoneNumber || '+251975666699';
+      
+      // Send message to company WhatsApp
+      const whatsappSent = await whatsappService.sendContactMessage(savedMessage, companyPhoneNumber);
+      
+      if (whatsappSent) {
+        console.log('✅ Contact message successfully sent to WhatsApp');
+      } else {
+        console.log('⚠️ Contact message saved but WhatsApp sending failed');
+      }
       
       res.json({
         message: 'Your message has been sent successfully!',
-        success: true
+        success: true,
+        whatsappSent: whatsappSent
       });
     } catch (error) {
       console.error('Error submitting contact form:', error);
@@ -551,5 +565,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   const httpServer = createServer(app);
+  
+  // Setup WebSocket server for real-time notifications
+  const wss = new WebSocketServer({ 
+    server: httpServer, 
+    path: '/ws'
+  });
+
+  wss.on('connection', (ws) => {
+    console.log('🔌 New WebSocket connection established');
+    
+    // Add connection to WhatsApp service for notifications
+    whatsappService.addWebSocketConnection(ws);
+    
+    // Send welcome message
+    ws.send(JSON.stringify({
+      type: 'connection_established',
+      message: 'Connected to Temer Properties notification service',
+      timestamp: new Date().toISOString()
+    }));
+
+    ws.on('close', () => {
+      console.log('🔌 WebSocket connection closed');
+      whatsappService.removeWebSocketConnection(ws);
+    });
+
+    ws.on('error', (error) => {
+      console.error('❌ WebSocket error:', error);
+      whatsappService.removeWebSocketConnection(ws);
+    });
+  });
+
+  console.log('🚀 WebSocket server setup complete on /ws path');
+  
   return httpServer;
 }

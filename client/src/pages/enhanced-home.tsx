@@ -9,6 +9,7 @@ import { ImageSlider } from "@/components/ui/image-slider";
 import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { useWebSocket } from "@/hooks/use-websocket";
 import type { Property } from "@shared/schema";
 import { contactViaWhatsApp, contactViaContactForm } from "@/lib/whatsapp";
 import { apiRequest } from "@/lib/queryClient";
@@ -40,6 +41,7 @@ export function HomePage({ propertyId }: HomePageProps = {}) {
   });
   const [isSubmittingContact, setIsSubmittingContact] = useState(false);
   const { toast } = useToast();
+  const { isConnected, whatsappStatus } = useWebSocket();
 
   const { data: properties = [], isLoading } = useQuery<Property[]>({
     queryKey: ['/api/properties']
