@@ -43,6 +43,18 @@ const sliderImageSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
+// WhatsApp Settings Schema
+const whatsappSettingsSchema = new mongoose.Schema({
+  phoneNumber: { type: String, required: true, default: '+251975666699' },
+  isActive: { type: Boolean, default: true },
+  businessName: { type: String, default: 'Temer Properties' },
+  welcomeMessage: { type: String, default: 'Hello! Welcome to Temer Properties. How can we assist you today?' },
+  propertyInquiryTemplate: { type: String, default: 'Hello! I\'m interested in this property:\n\n🏠 *{title}*\n📍 Location: {location}\n🛏️ Bedrooms: {bedrooms}\n🚿 Bathrooms: {bathrooms}\n📐 Size: {size} m²\n\nCould you please provide more information about this property? I would like to schedule a viewing or discuss the details further.\n\nThank you!' },
+  generalInquiryTemplate: { type: String, default: 'Hello Temer Properties! 👋\n\nI\'m interested in learning more about your real estate services. Could you please help me with information about available properties?\n\nThank you!' },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
+});
+
 // Auto-increment plugin for IDs
 function autoIncrement(schema: mongoose.Schema, options: { field: string; start?: number }) {
   schema.add({ [options.field]: { type: Number, unique: true } });
@@ -62,9 +74,15 @@ userSchema.plugin(autoIncrement, { field: 'id' });
 propertySchema.plugin(autoIncrement, { field: 'id' });
 propertyImageSchema.plugin(autoIncrement, { field: 'id' });
 sliderImageSchema.plugin(autoIncrement, { field: 'id' });
+whatsappSettingsSchema.plugin(autoIncrement, { field: 'id' });
 
 // Update timestamps
 propertySchema.pre('save', function(next) {
+  this.updatedAt = new Date();
+  next();
+});
+
+whatsappSettingsSchema.pre('save', function(next) {
   this.updatedAt = new Date();
   next();
 });
@@ -74,6 +92,7 @@ export const UserModel = mongoose.model('User', userSchema);
 export const PropertyModel = mongoose.model('Property', propertySchema);
 export const PropertyImageModel = mongoose.model('PropertyImage', propertyImageSchema);
 export const SliderImageModel = mongoose.model('SliderImage', sliderImageSchema);
+export const WhatsAppSettingsModel = mongoose.model('WhatsAppSettings', whatsappSettingsSchema);
 
 // MongoDB connection
 export async function connectToMongoDB() {
@@ -89,6 +108,9 @@ export async function connectToMongoDB() {
     
     // Initialize sample data if database is empty
     await initializeSampleData();
+    
+    // Initialize WhatsApp settings
+    await initializeWhatsAppSettings();
   } catch (error) {
     console.error('MongoDB connection error:', error);
     throw error;
@@ -195,5 +217,29 @@ async function initializeSampleData() {
 
   } catch (error) {
     console.error('Error initializing sample data:', error);
+  }
+}
+
+async function initializeWhatsAppSettings() {
+  try {
+    // Check if WhatsApp settings already exist
+    const existingSettings = await WhatsAppSettingsModel.countDocuments();
+    
+    if (existingSettings === 0) {
+      // Create default WhatsApp settings
+      const defaultSettings = new WhatsAppSettingsModel({
+        phoneNumber: '+251975666699',
+        isActive: true,
+        businessName: 'Temer Properties',
+        welcomeMessage: 'Hello! Welcome to Temer Properties. How can we assist you today?',
+        propertyInquiryTemplate: 'Hello! I\'m interested in this property:\n\n🏠 *{title}*\n📍 Location: {location}\n🛏️ Bedrooms: {bedrooms}\n🚿 Bathrooms: {bathrooms}\n📐 Size: {size} m²\n\nCould you please provide more information about this property? I would like to schedule a viewing or discuss the details further.\n\nThank you!',
+        generalInquiryTemplate: 'Hello Temer Properties! 👋\n\nI\'m interested in learning more about your real estate services. Could you please help me with information about available properties?\n\nThank you!'
+      });
+      
+      await defaultSettings.save();
+      console.log('Default WhatsApp settings initialized');
+    }
+  } catch (error) {
+    console.error('Error initializing WhatsApp settings:', error);
   }
 }

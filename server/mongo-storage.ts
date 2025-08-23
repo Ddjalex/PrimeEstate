@@ -4,10 +4,12 @@ import {
   type Property, 
   type InsertProperty,
   type PropertyImage,
-  type InsertPropertyImage
+  type InsertPropertyImage,
+  type WhatsAppSettings,
+  type InsertWhatsAppSettings
 } from "@shared/schema";
 import { IStorage } from "./storage";
-import { UserModel, PropertyModel, PropertyImageModel, SliderImageModel } from "./mongodb";
+import { UserModel, PropertyModel, PropertyImageModel, SliderImageModel, WhatsAppSettingsModel } from "./mongodb";
 import mongoose from "mongoose";
 
 export class MongoStorage implements IStorage {
@@ -186,6 +188,21 @@ export class MongoStorage implements IStorage {
     return result !== null;
   }
 
+  // WhatsApp settings operations
+  async getWhatsAppSettings(): Promise<WhatsAppSettings | undefined> {
+    const settings = await WhatsAppSettingsModel.findOne().lean();
+    return settings ? this.convertMongoWhatsAppSettings(settings) : undefined;
+  }
+
+  async updateWhatsAppSettings(updates: Partial<InsertWhatsAppSettings>): Promise<WhatsAppSettings | undefined> {
+    const settings = await WhatsAppSettingsModel.findOneAndUpdate(
+      {}, // Update the first (and only) document
+      { ...updates, updatedAt: new Date() },
+      { new: true, upsert: true } // Create if doesn't exist
+    ).lean();
+    return settings ? this.convertMongoWhatsAppSettings(settings) : undefined;
+  }
+
   // Helper methods to convert MongoDB documents to our types
   private convertMongoUser(mongoUser: any): User {
     return {
@@ -224,6 +241,20 @@ export class MongoStorage implements IStorage {
       isMain: mongoImage.isMain,
       sortOrder: mongoImage.sortOrder,
       createdAt: mongoImage.createdAt
+    };
+  }
+
+  private convertMongoWhatsAppSettings(mongoSettings: any): WhatsAppSettings {
+    return {
+      id: String(mongoSettings._id),
+      phoneNumber: mongoSettings.phoneNumber,
+      isActive: mongoSettings.isActive,
+      businessName: mongoSettings.businessName,
+      welcomeMessage: mongoSettings.welcomeMessage,
+      propertyInquiryTemplate: mongoSettings.propertyInquiryTemplate,
+      generalInquiryTemplate: mongoSettings.generalInquiryTemplate,
+      createdAt: mongoSettings.createdAt,
+      updatedAt: mongoSettings.updatedAt
     };
   }
 }

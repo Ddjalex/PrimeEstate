@@ -79,6 +79,16 @@ export default function AdminDashboard() {
   const [showSliderForm, setShowSliderForm] = useState(false);
   const [editingSlider, setEditingSlider] = useState<any>(null);
 
+  // WhatsApp settings state
+  const [whatsappForm, setWhatsappForm] = useState({
+    phoneNumber: "",
+    isActive: true,
+    businessName: "",
+    welcomeMessage: "",
+    propertyInquiryTemplate: "",
+    generalInquiryTemplate: ""
+  });
+
   // Check authentication
   useEffect(() => {
     const auth = sessionStorage.getItem("admin_auth");
@@ -104,6 +114,26 @@ export default function AdminDashboard() {
     queryKey: ["/api/slider"],
     queryFn: () => apiRequest("/api/slider"),
   });
+
+  // Fetch WhatsApp settings
+  const { data: whatsappSettings, isLoading: isLoadingWhatsApp } = useQuery({
+    queryKey: ["/api/whatsapp/settings"],
+    queryFn: () => apiRequest("/api/whatsapp/settings"),
+  });
+
+  // Initialize WhatsApp form when settings are loaded
+  useEffect(() => {
+    if (whatsappSettings) {
+      setWhatsappForm({
+        phoneNumber: whatsappSettings.phoneNumber || "",
+        isActive: whatsappSettings.isActive ?? true,
+        businessName: whatsappSettings.businessName || "",
+        welcomeMessage: whatsappSettings.welcomeMessage || "",
+        propertyInquiryTemplate: whatsappSettings.propertyInquiryTemplate || "",
+        generalInquiryTemplate: whatsappSettings.generalInquiryTemplate || ""
+      });
+    }
+  }, [whatsappSettings]);
 
   // Calculate dashboard statistics
   const dashboardStats: DashboardStats = useMemo(() => {
@@ -311,6 +341,33 @@ export default function AdminDashboard() {
     },
   });
 
+  // WhatsApp Settings mutation
+  const updateWhatsAppMutation = useMutation({
+    mutationFn: (data: any) =>
+      apiRequest("/api/admin/whatsapp/settings", {
+        method: "PUT",
+        headers: getAuthHeaders(),
+        body: JSON.stringify(data),
+      }),
+    onSuccess: () => {
+      toast({ title: "Success", description: "WhatsApp settings updated successfully" });
+      // Force immediate refetch of data and clear cache
+      queryClient.invalidateQueries({ queryKey: ["/api/whatsapp/settings"] });
+      queryClient.refetchQueries({ queryKey: ["/api/whatsapp/settings"] });
+      // Clear WhatsApp cache in the client library
+      import('@/lib/whatsapp').then(({ clearWhatsAppCache }) => {
+        clearWhatsAppCache();
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to update WhatsApp settings",
+        variant: "destructive",
+      });
+    },
+  });
+
   const resetForm = () => {
     setPropertyForm({
       title: "",
@@ -336,6 +393,12 @@ export default function AdminDashboard() {
     setSliderImageFiles([]);
     setEditingSlider(null);
     setShowSliderForm(false);
+  };
+
+  // WhatsApp settings form handler
+  const handleUpdateWhatsAppSettings = (e: React.FormEvent) => {
+    e.preventDefault();
+    updateWhatsAppMutation.mutate(whatsappForm);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -525,7 +588,7 @@ export default function AdminDashboard() {
       {/* Main Content */}
       <div className="px-6 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4 mb-8">
+          <TabsList className="grid w-full grid-cols-5 mb-8">
             <TabsTrigger value="overview" className="flex items-center space-x-2">
               <Home className="w-4 h-4" />
               <span>Overview</span>
@@ -537,6 +600,10 @@ export default function AdminDashboard() {
             <TabsTrigger value="slider" className="flex items-center space-x-2">
               <Eye className="w-4 h-4" />
               <span>Hero Slider</span>
+            </TabsTrigger>
+            <TabsTrigger value="whatsapp" className="flex items-center space-x-2">
+              <i className="fab fa-whatsapp w-4 h-4"></i>
+              <span>WhatsApp</span>
             </TabsTrigger>
             <TabsTrigger value="analytics" className="flex items-center space-x-2">
               <TrendingUp className="w-4 h-4" />
@@ -904,7 +971,7 @@ export default function AdminDashboard() {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => contactViaWhatsApp({
+                          onClick={async () => await contactViaWhatsApp({
                             title: property.title,
                             location: property.location,
                             bedrooms: property.bedrooms,
@@ -1155,6 +1222,173 @@ export default function AdminDashboard() {
                 </ResponsiveContainer>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* WhatsApp Settings Tab */}
+          <TabsContent value="whatsapp" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Current Settings Card */}
+              <Card className="border-0 shadow-lg">
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <i className="fab fa-whatsapp text-green-500"></i>
+                    <span>Current Settings</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {isLoadingWhatsApp ? (
+                    <div className="space-y-2">
+                      <div className="h-4 bg-gray-200 rounded animate-pulse" />
+                      <div className="h-4 bg-gray-200 rounded animate-pulse w-3/4" />
+                      <div className="h-4 bg-gray-200 rounded animate-pulse w-1/2" />
+                    </div>
+                  ) : whatsappSettings ? (
+                    <>
+                      <div>
+                        <Label className="text-sm font-medium text-gray-600">Phone Number</Label>
+                        <p className="text-lg font-semibold text-gray-900">{whatsappSettings.phoneNumber}</p>
+                      </div>
+                      <div>
+                        <Label className="text-sm font-medium text-gray-600">Business Name</Label>
+                        <p className="text-gray-900">{whatsappSettings.businessName}</p>
+                      </div>
+                      <div>
+                        <Label className="text-sm font-medium text-gray-600">Status</Label>
+                        <Badge className={whatsappSettings.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}>
+                          {whatsappSettings.isActive ? 'Active' : 'Inactive'}
+                        </Badge>
+                      </div>
+                      <div>
+                        <Label className="text-sm font-medium text-gray-600">Last Updated</Label>
+                        <p className="text-sm text-gray-500">
+                          {new Date(whatsappSettings.updatedAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </>
+                  ) : (
+                    <p className="text-gray-500">No WhatsApp settings found</p>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Update Settings Form */}
+              <Card className="border-0 shadow-lg lg:col-span-2">
+                <CardHeader>
+                  <CardTitle>Update WhatsApp Settings</CardTitle>
+                  <p className="text-gray-600">Configure how customers can contact you via WhatsApp</p>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handleUpdateWhatsAppSettings} className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="phoneNumber">WhatsApp Phone Number *</Label>
+                        <Input
+                          id="phoneNumber"
+                          type="tel"
+                          placeholder="+251975666699"
+                          value={whatsappForm.phoneNumber}
+                          onChange={(e) => setWhatsappForm({ ...whatsappForm, phoneNumber: e.target.value })}
+                          className="mt-1"
+                          required
+                        />
+                        <p className="text-xs text-gray-500 mt-1">Include country code (e.g., +251975666699)</p>
+                      </div>
+                      <div>
+                        <Label htmlFor="businessName">Business Name *</Label>
+                        <Input
+                          id="businessName"
+                          placeholder="Temer Properties"
+                          value={whatsappForm.businessName}
+                          onChange={(e) => setWhatsappForm({ ...whatsappForm, businessName: e.target.value })}
+                          className="mt-1"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="welcomeMessage">Welcome Message</Label>
+                      <Textarea
+                        id="welcomeMessage"
+                        placeholder="Hello! Welcome to Temer Properties. How can we assist you today?"
+                        value={whatsappForm.welcomeMessage}
+                        onChange={(e) => setWhatsappForm({ ...whatsappForm, welcomeMessage: e.target.value })}
+                        className="mt-1"
+                        rows={3}
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="propertyInquiryTemplate">Property Inquiry Message Template</Label>
+                      <Textarea
+                        id="propertyInquiryTemplate"
+                        placeholder="Template for property-specific inquiries"
+                        value={whatsappForm.propertyInquiryTemplate}
+                        onChange={(e) => setWhatsappForm({ ...whatsappForm, propertyInquiryTemplate: e.target.value })}
+                        className="mt-1"
+                        rows={4}
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        Use placeholders: {'{title}'}, {'{location}'}, {'{bedrooms}'}, {'{bathrooms}'}, {'{size}'}
+                      </p>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="generalInquiryTemplate">General Inquiry Message Template</Label>
+                      <Textarea
+                        id="generalInquiryTemplate"
+                        placeholder="Template for general inquiries"
+                        value={whatsappForm.generalInquiryTemplate}
+                        onChange={(e) => setWhatsappForm({ ...whatsappForm, generalInquiryTemplate: e.target.value })}
+                        className="mt-1"
+                        rows={3}
+                      />
+                    </div>
+
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id="isActive"
+                        checked={whatsappForm.isActive}
+                        onChange={(e) => setWhatsappForm({ ...whatsappForm, isActive: e.target.checked })}
+                        className="rounded border-gray-300"
+                      />
+                      <Label htmlFor="isActive" className="text-sm font-medium">
+                        Enable WhatsApp Integration
+                      </Label>
+                    </div>
+
+                    <div className="flex justify-end space-x-4 pt-4 border-t border-gray-200">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => {
+                          if (whatsappSettings) {
+                            setWhatsappForm({
+                              phoneNumber: whatsappSettings.phoneNumber || "",
+                              isActive: whatsappSettings.isActive ?? true,
+                              businessName: whatsappSettings.businessName || "",
+                              welcomeMessage: whatsappSettings.welcomeMessage || "",
+                              propertyInquiryTemplate: whatsappSettings.propertyInquiryTemplate || "",
+                              generalInquiryTemplate: whatsappSettings.generalInquiryTemplate || ""
+                            });
+                          }
+                        }}
+                      >
+                        Reset
+                      </Button>
+                      <Button
+                        type="submit"
+                        className="bg-green-600 hover:bg-green-700 text-white"
+                        disabled={updateWhatsAppMutation.isPending}
+                      >
+                        {updateWhatsAppMutation.isPending ? "Updating..." : "Update Settings"}
+                      </Button>
+                    </div>
+                  </form>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
         </Tabs>
       </div>

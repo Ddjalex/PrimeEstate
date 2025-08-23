@@ -1,7 +1,7 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertPropertySchema, insertPropertyImageSchema, insertUserSchema, type User } from "@shared/schema";
+import { insertPropertySchema, insertPropertyImageSchema, insertUserSchema, insertWhatsAppSettingsSchema, type User } from "@shared/schema";
 import * as bcrypt from "bcrypt";
 import multer from "multer";
 import path from "path";
@@ -378,6 +378,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error deleting slider image:', error);
       res.status(500).json({ error: 'Failed to delete slider image' });
+    }
+  });
+
+  // WhatsApp Settings routes
+  // Public route to get current WhatsApp settings
+  app.get('/api/whatsapp/settings', async (req: Request, res: Response) => {
+    try {
+      const settings = await storage.getWhatsAppSettings();
+      if (!settings) {
+        return res.status(404).json({ error: 'WhatsApp settings not found' });
+      }
+      res.json(settings);
+    } catch (error) {
+      console.error('Error fetching WhatsApp settings:', error);
+      res.status(500).json({ error: 'Failed to fetch WhatsApp settings' });
+    }
+  });
+
+  // Protected admin route to update WhatsApp settings
+  app.put('/api/admin/whatsapp/settings', adminAuth, async (req: Request, res: Response) => {
+    try {
+      const settingsData = insertWhatsAppSettingsSchema.parse(req.body);
+      const updatedSettings = await storage.updateWhatsAppSettings(settingsData);
+      
+      if (!updatedSettings) {
+        return res.status(400).json({ error: 'Failed to update WhatsApp settings' });
+      }
+      
+      res.json({
+        message: 'WhatsApp settings updated successfully',
+        settings: updatedSettings
+      });
+    } catch (error) {
+      console.error('Error updating WhatsApp settings:', error);
+      res.status(500).json({ error: 'Failed to update WhatsApp settings' });
     }
   });
 

@@ -56,6 +56,25 @@ export const insertPropertyImageSchema = createInsertSchema(propertyImages).omit
   createdAt: true,
 });
 
+// WhatsApp Settings table
+export const whatsappSettings = pgTable("whatsapp_settings", {
+  id: serial("id").primaryKey(),
+  phoneNumber: text("phone_number").notNull().default("+251975666699"),
+  isActive: boolean("is_active").default(true).notNull(),
+  businessName: text("business_name").default("Temer Properties").notNull(),
+  welcomeMessage: text("welcome_message").default("Hello! Welcome to Temer Properties. How can we assist you today?").notNull(),
+  propertyInquiryTemplate: text("property_inquiry_template").default("Hello! I'm interested in this property:\n\n🏠 *{title}*\n📍 Location: {location}\n🛏️ Bedrooms: {bedrooms}\n🚿 Bathrooms: {bathrooms}\n📐 Size: {size} m²\n\nCould you please provide more information about this property? I would like to schedule a viewing or discuss the details further.\n\nThank you!").notNull(),
+  generalInquiryTemplate: text("general_inquiry_template").default("Hello Temer Properties! 👋\n\nI'm interested in learning more about your real estate services. Could you please help me with information about available properties?\n\nThank you!").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const insertWhatsAppSettingsSchema = createInsertSchema(whatsappSettings).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 // Types - Override ID types to use string for MongoDB compatibility
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = Omit<typeof users.$inferSelect, 'id'> & { id: string };
@@ -63,3 +82,5 @@ export type Property = Omit<typeof properties.$inferSelect, 'id'> & { id: string
 export type InsertProperty = z.infer<typeof insertPropertySchema>;
 export type PropertyImage = Omit<typeof propertyImages.$inferSelect, 'id' | 'propertyId'> & { id: string; propertyId: string };
 export type InsertPropertyImage = Omit<z.infer<typeof insertPropertyImageSchema>, 'propertyId'> & { propertyId: string };
+export type WhatsAppSettings = Omit<typeof whatsappSettings.$inferSelect, 'id'> & { id: string };
+export type InsertWhatsAppSettings = z.infer<typeof insertWhatsAppSettingsSchema>;

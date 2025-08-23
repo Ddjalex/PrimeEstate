@@ -4,7 +4,9 @@ import {
   type Property, 
   type InsertProperty,
   type PropertyImage,
-  type InsertPropertyImage
+  type InsertPropertyImage,
+  type WhatsAppSettings,
+  type InsertWhatsAppSettings
 } from "@shared/schema";
 
 export interface IStorage {
@@ -31,6 +33,10 @@ export interface IStorage {
   createSliderImage(image: { imageUrl: string; title: string; description: string }): Promise<{ id: string; imageUrl: string; title: string; description: string; isActive: boolean }>;
   updateSliderImage(id: string, image: { imageUrl?: string; title?: string; description?: string; isActive?: boolean }): Promise<boolean>;
   deleteSliderImage(id: string): Promise<boolean>;
+  
+  // WhatsApp settings operations
+  getWhatsAppSettings(): Promise<WhatsAppSettings | undefined>;
+  updateWhatsAppSettings(settings: Partial<InsertWhatsAppSettings>): Promise<WhatsAppSettings | undefined>;
 }
 
 export class MemStorage implements IStorage {
@@ -38,6 +44,7 @@ export class MemStorage implements IStorage {
   private properties: Property[] = [];
   private propertyImages: PropertyImage[] = [];
   private sliderImages: { id: number; imageUrl: string; title: string; description: string; isActive: boolean }[] = [];
+  private whatsappSettings: WhatsAppSettings | null = null;
   private nextUserId = 1;
   private nextPropertyId = 1;
   private nextPropertyImageId = 1;
@@ -296,6 +303,41 @@ export class MemStorage implements IStorage {
     
     this.sliderImages.splice(imageIndex, 1);
     return true;
+  }
+
+  // WhatsApp settings operations
+  async getWhatsAppSettings(): Promise<WhatsAppSettings | undefined> {
+    if (!this.whatsappSettings) {
+      // Initialize default settings
+      this.whatsappSettings = {
+        id: '1',
+        phoneNumber: '+251975666699',
+        isActive: true,
+        businessName: 'Temer Properties',
+        welcomeMessage: 'Hello! Welcome to Temer Properties. How can we assist you today?',
+        propertyInquiryTemplate: 'Hello! I\'m interested in this property:\n\n🏠 *{title}*\n📍 Location: {location}\n🛏️ Bedrooms: {bedrooms}\n🚿 Bathrooms: {bathrooms}\n📐 Size: {size} m²\n\nCould you please provide more information about this property? I would like to schedule a viewing or discuss the details further.\n\nThank you!',
+        generalInquiryTemplate: 'Hello Temer Properties! 👋\n\nI\'m interested in learning more about your real estate services. Could you please help me with information about available properties?\n\nThank you!',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+    }
+    return this.whatsappSettings;
+  }
+
+  async updateWhatsAppSettings(updates: Partial<InsertWhatsAppSettings>): Promise<WhatsAppSettings | undefined> {
+    if (!this.whatsappSettings) {
+      await this.getWhatsAppSettings(); // Initialize if not exists
+    }
+    
+    if (this.whatsappSettings) {
+      this.whatsappSettings = {
+        ...this.whatsappSettings,
+        ...updates,
+        updatedAt: new Date()
+      };
+    }
+    
+    return this.whatsappSettings;
   }
 }
 
