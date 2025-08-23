@@ -1,0 +1,34 @@
+"Fix the Hero Slider Management file upload functionality in the admin dashboard - uploaded images are not displaying properly in the slider management interface"
+
+Key Issues to Address:
+File Upload Component Integration:
+
+The FileUpload component in the Hero Slider Management section is not properly handling image uploads
+Images uploaded through the file upload interface are not being saved or displayed in the slider management grid
+The file upload process may not be correctly linking uploaded images to the slider database records
+Image Display and Preview Issues:
+
+Uploaded slider images are not showing proper previews in the management interface
+The image grid/cards are not reflecting newly uploaded images
+Image URLs from uploads may not be properly formatted or accessible
+State Management Problems:
+
+The slider form state may not be properly updating when images are uploaded
+The FileUpload component's onUploadComplete callback might not be correctly updating the slider image URL
+Form submission may not be properly including the uploaded image data
+API Integration Issues:
+
+The slider image creation/update API calls may not be properly handling the uploaded image URLs
+File upload endpoint for slider images might not be working correctly
+Database operations for slider images may not be persisting the uploaded image URLs
+UI State Synchronization:
+
+The slider images list may not be refreshing after successful uploads
+Query invalidation after slider image operations may not be working properly
+Loading states during image upload and form submission may not be properly managed
+File Path and URL Resolution:
+
+Uploaded image paths may not be correctly resolved for display in the admin interface
+Static file serving for uploaded slider images may have path resolution issues
+Image URL construction for uploaded files may be incorrect
+This issue appears to be a combination of frontend state management, file upload handling, and API integration problems that prevent uploaded slider images from being properly saved, displayed, and managed in the admin dashboard.

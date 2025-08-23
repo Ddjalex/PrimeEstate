@@ -29,7 +29,9 @@ export function FileUpload({
 
   // Sync previewImages with existingImages when prop changes
   useEffect(() => {
-    setPreviewImages(existingImages);
+    if (existingImages && existingImages.length > 0) {
+      setPreviewImages(existingImages);
+    }
   }, [existingImages]);
 
   const getAuthHeaders = () => ({
@@ -65,9 +67,13 @@ export function FileUpload({
       const uploadedUrls = await Promise.all(uploadPromises);
       const newImages = multiple ? [...previewImages, ...uploadedUrls] : uploadedUrls;
       
+      // Immediate state update
       setPreviewImages(newImages);
+      
       // Force immediate update to parent component
       onUploadComplete(newImages);
+      
+      console.log('Upload completed:', { uploadedUrls, newImages });
       
       toast({
         title: "Success",
@@ -186,9 +192,13 @@ export function FileUpload({
                     alt={`Preview ${index + 1}`}
                     className="w-full h-full object-cover"
                     onError={(e) => {
+                      console.error('Failed to load image:', imageUrl);
                       // Fallback for broken images
                       const target = e.target as HTMLImageElement;
                       target.style.display = 'none';
+                    }}
+                    onLoad={() => {
+                      console.log('Successfully loaded image:', imageUrl);
                     }}
                   />
                 </div>

@@ -283,14 +283,15 @@ export default function AdminDashboard() {
         headers: getAuthHeaders(),
         body: JSON.stringify(data),
       }),
-    onSuccess: () => {
+    onSuccess: async () => {
       toast({ title: "Success", description: "Slider image created successfully" });
       // Force immediate refetch of data
-      queryClient.invalidateQueries({ queryKey: ["/api/slider"] });
-      queryClient.refetchQueries({ queryKey: ["/api/slider"] });
+      await queryClient.invalidateQueries({ queryKey: ["/api/slider"] });
+      await queryClient.refetchQueries({ queryKey: ["/api/slider"] });
       resetSliderForm();
     },
     onError: (error: any) => {
+      console.error('Create slider error:', error);
       toast({
         title: "Error",
         description: error.message || "Failed to create slider image",
@@ -306,14 +307,15 @@ export default function AdminDashboard() {
         headers: getAuthHeaders(),
         body: JSON.stringify(data),
       }),
-    onSuccess: () => {
+    onSuccess: async () => {
       toast({ title: "Success", description: "Slider image updated successfully" });
       // Force immediate refetch of data
-      queryClient.invalidateQueries({ queryKey: ["/api/slider"] });
-      queryClient.refetchQueries({ queryKey: ["/api/slider"] });
+      await queryClient.invalidateQueries({ queryKey: ["/api/slider"] });
+      await queryClient.refetchQueries({ queryKey: ["/api/slider"] });
       resetSliderForm();
     },
     onError: (error: any) => {
+      console.error('Update slider error:', error);
       toast({
         title: "Error",
         description: error.message || "Failed to update slider image",
@@ -328,11 +330,13 @@ export default function AdminDashboard() {
         method: "DELETE",
         headers: getAuthHeaders(),
       }),
-    onSuccess: () => {
+    onSuccess: async () => {
       toast({ title: "Success", description: "Slider image deleted successfully" });
-      queryClient.invalidateQueries({ queryKey: ["/api/slider"] });
+      await queryClient.invalidateQueries({ queryKey: ["/api/slider"] });
+      await queryClient.refetchQueries({ queryKey: ["/api/slider"] });
     },
     onError: (error: any) => {
+      console.error('Delete slider error:', error);
       toast({
         title: "Error",
         description: error.message || "Failed to delete slider image",
@@ -554,6 +558,7 @@ export default function AdminDashboard() {
     });
     setSliderImageFiles(slider.imageUrl ? [slider.imageUrl] : []);
     setShowSliderForm(true);
+    console.log('Editing slider:', slider, 'Setting image files:', slider.imageUrl ? [slider.imageUrl] : []);
   };
 
   const handleSliderDelete = (id: string) => {
@@ -1073,6 +1078,14 @@ export default function AdminDashboard() {
                         src={slider.imageUrl}
                         alt={slider.title}
                         className="w-full h-full object-cover"
+                        onError={(e) => {
+                          console.error('Failed to load slider image:', slider.imageUrl);
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                        }}
+                        onLoad={() => {
+                          console.log('Successfully loaded slider image:', slider.imageUrl);
+                        }}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                       <div className="absolute bottom-4 left-4 right-4 text-white">
