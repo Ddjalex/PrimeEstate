@@ -9,6 +9,7 @@ import NotFound from "@/pages/not-found";
 import AdminLogin from "@/pages/admin-login";
 import AdminRegister from "@/pages/admin-register";
 import AdminDashboard from "@/pages/admin-dashboard";
+import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
 
 function Router() {
   return (
@@ -30,6 +31,7 @@ function App() {
       <TooltipProvider>
         <Toaster />
         <Router />
+        <FloatingWhatsApp />
       </TooltipProvider>
     </QueryClientProvider>
   );

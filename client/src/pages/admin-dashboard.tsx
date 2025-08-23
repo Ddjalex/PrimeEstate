@@ -31,6 +31,7 @@ import {
   MoreHorizontal
 } from 'lucide-react';
 import type { Property, PropertyImage } from "@shared/schema";
+import { contactViaWhatsApp } from "@/lib/whatsapp";
 
 interface PropertyWithImages extends Property {
   images?: PropertyImage[];
@@ -891,7 +892,7 @@ export default function AdminDashboard() {
                       </div>
 
                       {/* Action Buttons */}
-                      <div className="grid grid-cols-2 gap-2">
+                      <div className="grid grid-cols-3 gap-2">
                         <Button
                           size="sm"
                           onClick={() => handleEdit(property)}
@@ -899,6 +900,21 @@ export default function AdminDashboard() {
                         >
                           <Edit className="w-4 h-4 mr-1" />
                           Edit
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => contactViaWhatsApp({
+                            title: property.title,
+                            location: property.location,
+                            bedrooms: property.bedrooms,
+                            bathrooms: property.bathrooms,
+                            size: property.size
+                          })}
+                          className="border-green-500 text-green-600 hover:bg-green-500 hover:text-white"
+                        >
+                          <i className="fab fa-whatsapp text-sm mr-1"></i>
+                          Chat
                         </Button>
                         <Button
                           size="sm"

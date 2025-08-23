@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { contactViaWhatsApp } from "@/lib/whatsapp";
 
 export default function Home() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -459,6 +460,22 @@ export default function Home() {
                         data-testid={`property-call-${index}`}
                       >
                         Call
+                      </Button>
+                      <Button 
+                        size="sm"
+                        variant="outline"
+                        className="border-green-500 text-green-600 hover:bg-green-500 hover:text-white"
+                        onClick={() => contactViaWhatsApp({
+                          title: property.title,
+                          location: property.location,
+                          bedrooms: property.beds,
+                          bathrooms: property.baths,
+                          size: property.size
+                        })}
+                        data-testid={`property-whatsapp-${index}`}
+                      >
+                        <i className="fab fa-whatsapp mr-1"></i>
+                        WhatsApp
                       </Button>
                       <Button 
                         size="sm"

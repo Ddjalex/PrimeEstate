@@ -1,4 +1,4 @@
-import { Search, MapPin, Bed, Bath, Square, Phone, Mail, MapPin as LocationIcon, Star, Users, Building, Award } from "lucide-react";
+import { Search, MapPin, Bed, Bath, Square, Phone, Mail, MapPin as LocationIcon, Star, Users, Building, Award, MessageCircle } from "lucide-react";
 import temerLogo from '@assets/images (2)_1755853378467.jpg';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,7 @@ import { ImageSlider } from "@/components/ui/image-slider";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import type { Property } from "@shared/schema";
+import { contactViaWhatsApp } from "@/lib/whatsapp";
 
 interface SliderImage {
   id: number;
@@ -232,9 +233,26 @@ export function HomePage() {
                         {formatPrice(property.size || 0)}
                       </div>
                     </div>
-                    <Button className="w-full bg-temer-green hover:bg-temer-dark-green text-white font-semibold" data-testid={`button-view-${property.id}`}>
-                      View Details
-                    </Button>
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button className="bg-temer-green hover:bg-temer-dark-green text-white font-semibold" data-testid={`button-view-${property.id}`}>
+                        View Details
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        className="border-green-500 text-green-600 hover:bg-green-500 hover:text-white font-semibold"
+                        onClick={() => contactViaWhatsApp({
+                          title: property.title,
+                          location: property.location,
+                          bedrooms: property.bedrooms,
+                          bathrooms: property.bathrooms,
+                          size: property.size
+                        })}
+                        data-testid={`button-whatsapp-${property.id}`}
+                      >
+                        <MessageCircle className="w-4 h-4 mr-1" />
+                        WhatsApp
+                      </Button>
+                    </div>
                   </CardContent>
                 </Card>
               ))}
