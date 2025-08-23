@@ -438,19 +438,37 @@ export function HomePage({ propertyId }: HomePageProps = {}) {
                     setIsSubmittingContact(true);
                     
                     try {
-                      await contactViaContactForm(contactForm);
-                      toast({ 
-                        title: "Message sent!", 
-                        description: "We've opened WhatsApp with your message. Please complete sending it through WhatsApp." 
+                      // Send message via API instead of opening WhatsApp
+                      const response = await fetch('/api/contact/submit', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(contactForm),
                       });
                       
-                      // Reset form
-                      setContactForm({
-                        name: '',
-                        email: '',
-                        phone: '',
-                        message: ''
-                      });
+                      const result = await response.json();
+                      
+                      if (response.ok && result.success) {
+                        toast({ 
+                          title: "Message sent successfully!", 
+                          description: "Thank you for contacting us. We'll get back to you soon!" 
+                        });
+                        
+                        // Reset form
+                        setContactForm({
+                          name: '',
+                          email: '',
+                          phone: '',
+                          message: ''
+                        });
+                      } else {
+                        toast({ 
+                          title: "Error", 
+                          description: result.error || "Failed to send your message. Please try again.",
+                          variant: "destructive" 
+                        });
+                      }
                     } catch (error) {
                       console.error('Failed to send message:', error);
                       toast({ 

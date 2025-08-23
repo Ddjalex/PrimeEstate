@@ -1,7 +1,7 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertPropertySchema, insertPropertyImageSchema, insertUserSchema, insertWhatsAppSettingsSchema, insertContactSettingsSchema, type User, type InsertContactSettings } from "@shared/schema";
+import { insertPropertySchema, insertPropertyImageSchema, insertUserSchema, insertWhatsAppSettingsSchema, insertContactSettingsSchema, insertContactMessageSchema, type User, type InsertContactSettings } from "@shared/schema";
 import * as bcrypt from "bcrypt";
 import multer from "multer";
 import path from "path";
@@ -449,6 +449,57 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error updating contact settings:', error);
       res.status(500).json({ error: 'Failed to update contact settings' });
+    }
+  });
+
+  // Contact form submission route
+  app.post('/api/contact/submit', async (req: Request, res: Response) => {
+    try {
+      const contactData = insertContactMessageSchema.parse(req.body);
+      const savedMessage = await storage.createContactMessage(contactData);
+      
+      // TODO: Here you can add WhatsApp API integration to send the message
+      // For now, we'll just save to database and return success
+      console.log('New contact message received:', savedMessage);
+      
+      res.json({
+        message: 'Your message has been sent successfully!',
+        success: true
+      });
+    } catch (error) {
+      console.error('Error submitting contact form:', error);
+      res.status(500).json({ 
+        error: 'Failed to send your message. Please try again.',
+        success: false
+      });
+    }
+  });
+
+  // Admin route to get contact messages
+  app.get('/api/admin/contact/messages', adminAuth, async (req: Request, res: Response) => {
+    try {
+      const messages = await storage.getContactMessages();
+      res.json(messages);
+    } catch (error) {
+      console.error('Error fetching contact messages:', error);
+      res.status(500).json({ error: 'Failed to fetch contact messages' });
+    }
+  });
+
+  // Admin route to mark message as read
+  app.put('/api/admin/contact/messages/:id/read', adminAuth, async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const success = await storage.markContactMessageAsRead(id);
+      
+      if (!success) {
+        return res.status(404).json({ error: 'Message not found' });
+      }
+      
+      res.json({ message: 'Message marked as read', success: true });
+    } catch (error) {
+      console.error('Error marking message as read:', error);
+      res.status(500).json({ error: 'Failed to mark message as read' });
     }
   });
 

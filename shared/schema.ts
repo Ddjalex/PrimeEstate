@@ -92,6 +92,24 @@ export const insertContactSettingsSchema = createInsertSchema(contactSettings).o
   updatedAt: true,
 });
 
+// Contact Messages Schema
+export const contactMessages = {
+  id: 0,
+  name: '',
+  email: '',
+  phone: '',
+  message: '',
+  isRead: false,
+  createdAt: new Date(),
+};
+
+export const insertContactMessageSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email address"),
+  phone: z.string().min(1, "Phone number is required"),
+  message: z.string().min(1, "Message is required"),
+});
+
 // Types - Override ID types to use string for MongoDB compatibility
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = Omit<typeof users.$inferSelect, 'id'> & { id: string };
@@ -103,3 +121,5 @@ export type WhatsAppSettings = Omit<typeof whatsappSettings.$inferSelect, 'id'> 
 export type InsertWhatsAppSettings = z.infer<typeof insertWhatsAppSettingsSchema>;
 export type ContactSettings = Omit<typeof contactSettings.$inferSelect, 'id'> & { id: string };
 export type InsertContactSettings = z.infer<typeof insertContactSettingsSchema>;
+export type ContactMessage = typeof contactMessages & { id: string };
+export type InsertContactMessage = z.infer<typeof insertContactMessageSchema>;

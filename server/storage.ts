@@ -8,7 +8,9 @@ import {
   type WhatsAppSettings,
   type InsertWhatsAppSettings,
   type ContactSettings,
-  type InsertContactSettings
+  type InsertContactSettings,
+  type ContactMessage,
+  type InsertContactMessage
 } from "@shared/schema";
 
 export interface IStorage {
@@ -43,6 +45,11 @@ export interface IStorage {
   // Contact settings operations
   getContactSettings(): Promise<ContactSettings | undefined>;
   updateContactSettings(settings: Partial<InsertContactSettings>): Promise<ContactSettings | undefined>;
+  
+  // Contact messages operations
+  createContactMessage(message: InsertContactMessage): Promise<ContactMessage>;
+  getContactMessages(): Promise<ContactMessage[]>;
+  markContactMessageAsRead(id: string): Promise<boolean>;
 }
 
 export class MemStorage implements IStorage {

@@ -8,10 +8,12 @@ import {
   type WhatsAppSettings,
   type InsertWhatsAppSettings,
   type ContactSettings,
-  type InsertContactSettings
+  type InsertContactSettings,
+  type ContactMessage,
+  type InsertContactMessage
 } from "@shared/schema";
 import { IStorage } from "./storage";
-import { UserModel, PropertyModel, PropertyImageModel, SliderImageModel, WhatsAppSettingsModel, ContactSettingsModel } from "./mongodb";
+import { UserModel, PropertyModel, PropertyImageModel, SliderImageModel, WhatsAppSettingsModel, ContactSettingsModel, ContactMessageModel } from "./mongodb";
 import mongoose from "mongoose";
 
 export class MongoStorage implements IStorage {
@@ -284,6 +286,53 @@ export class MongoStorage implements IStorage {
       isActive: mongoSettings.isActive,
       createdAt: mongoSettings.createdAt,
       updatedAt: mongoSettings.updatedAt
+    };
+  }
+
+  // Contact Messages operations
+  async createContactMessage(insertMessage: InsertContactMessage): Promise<ContactMessage> {
+    const message = new ContactMessageModel({
+      ...insertMessage,
+      isRead: false,
+      createdAt: new Date()
+    });
+    await message.save();
+    return this.convertMongoContactMessage(message.toObject());
+  }
+
+  async getContactMessages(): Promise<ContactMessage[]> {
+    const messages = await ContactMessageModel.find()
+      .sort({ createdAt: -1 })
+      .lean();
+    return messages.map(m => this.convertMongoContactMessage(m));
+  }
+
+  async markContactMessageAsRead(id: string): Promise<boolean> {
+    try {
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return false;
+      }
+      const result = await ContactMessageModel.findByIdAndUpdate(
+        id,
+        { isRead: true },
+        { new: true }
+      );
+      return !!result;
+    } catch (error) {
+      console.error('Error marking contact message as read:', error);
+      return false;
+    }
+  }
+
+  private convertMongoContactMessage(mongoMessage: any): ContactMessage {
+    return {
+      id: String(mongoMessage._id),
+      name: mongoMessage.name,
+      email: mongoMessage.email,
+      phone: mongoMessage.phone,
+      message: mongoMessage.message,
+      isRead: mongoMessage.isRead,
+      createdAt: mongoMessage.createdAt
     };
   }
 }

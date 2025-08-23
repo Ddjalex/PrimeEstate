@@ -1,0 +1,32 @@
+client:495 [vite] connecting...
+client:618 [vite] connected.
+chunk-WERSD76P.js?v=bd37831b:21551 Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+login:1 [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) <input data-replit-metadata=​"client/​src/​pages/​admin-login.tsx:​73:​14" data-component-name=​"Input" type=​"password" class=​"flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:​border-0 file:​bg-transparent file:​text-sm file:​font-medium file:​text-foreground placeholder:​text-muted-foreground focus-visible:​outline-none focus-visible:​ring-2 focus-visible:​ring-ring focus-visible:​ring-offset-2 disabled:​cursor-not-allowed disabled:​opacity-50 md:​text-sm" id=​"password" required data-testid=​"input-password" value=​"admin123">​
+file-upload.tsx:76 Upload completed: {uploadedUrls: Array(1), newImages: Array(1)}
+file-upload.tsx:201 Successfully loaded image: /uploads/properties/image-1755944930544-596135191.png
+queryClient.ts:24  POST https://16254c45-b11f-40a9-8393-c8f0f8ca8106-00-1v2k3y4w3s8yt.kirk.replit.dev/api/admin/properties 500 (Internal Server Error)
+apiRequest @ queryClient.ts:24
+mutationFn @ admin-dashboard.tsx:242
+fn @ @tanstack_react-query.js?v=bd37831b:1189
+run @ @tanstack_react-query.js?v=bd37831b:494
+start @ @tanstack_react-query.js?v=bd37831b:536
+execute @ @tanstack_react-query.js?v=bd37831b:1225
+await in execute
+mutate @ @tanstack_react-query.js?v=bd37831b:2630
+(anonymous) @ @tanstack_react-query.js?v=bd37831b:3295
+handleSubmit @ admin-dashboard.tsx:496
+callCallback2 @ chunk-WERSD76P.js?v=bd37831b:3674
+invokeGuardedCallbackDev @ chunk-WERSD76P.js?v=bd37831b:3699
+invokeGuardedCallback @ chunk-WERSD76P.js?v=bd37831b:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-WERSD76P.js?v=bd37831b:3736
+executeDispatch @ chunk-WERSD76P.js?v=bd37831b:7014
+processDispatchQueueItemsInOrder @ chunk-WERSD76P.js?v=bd37831b:7034
+processDispatchQueue @ chunk-WERSD76P.js?v=bd37831b:7043
+dispatchEventsForPlugins @ chunk-WERSD76P.js?v=bd37831b:7051
+(anonymous) @ chunk-WERSD76P.js?v=bd37831b:7174
+batchedUpdates$1 @ chunk-WERSD76P.js?v=bd37831b:18913
+batchedUpdates @ chunk-WERSD76P.js?v=bd37831b:3579
+dispatchEventForPluginEventSystem @ chunk-WERSD76P.js?v=bd37831b:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-WERSD76P.js?v=bd37831b:5478
+dispatchEvent @ chunk-WERSD76P.js?v=bd37831b:5472
+dispatchDiscreteEvent @ chunk-WERSD76P.js?v=bd37831b:5449

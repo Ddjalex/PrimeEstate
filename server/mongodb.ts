@@ -104,6 +104,18 @@ contactSettingsSchema.pre('save', function(next) {
   next();
 });
 
+// Contact Messages Schema
+const contactMessageSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  phone: { type: String, required: true },
+  message: { type: String, required: true },
+  isRead: { type: Boolean, default: false },
+  createdAt: { type: Date, default: Date.now }
+});
+
+contactMessageSchema.plugin(autoIncrement, { field: 'id' });
+
 // Export models
 export const UserModel = mongoose.model('User', userSchema);
 export const PropertyModel = mongoose.model('Property', propertySchema);
@@ -111,6 +123,7 @@ export const PropertyImageModel = mongoose.model('PropertyImage', propertyImageS
 export const SliderImageModel = mongoose.model('SliderImage', sliderImageSchema);
 export const WhatsAppSettingsModel = mongoose.model('WhatsAppSettings', whatsappSettingsSchema);
 export const ContactSettingsModel = mongoose.model('ContactSettings', contactSettingsSchema);
+export const ContactMessageModel = mongoose.model('ContactMessage', contactMessageSchema);
 
 // MongoDB connection
 export async function connectToMongoDB() {
