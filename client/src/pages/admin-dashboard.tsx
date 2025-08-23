@@ -503,6 +503,9 @@ export default function AdminDashboard() {
   useEffect(() => {
     if (editingSlider && editingSlider.imageUrl) {
       setSliderImageFiles([editingSlider.imageUrl]);
+    } else if (!editingSlider) {
+      // Clear files when not editing (adding new slider)
+      setSliderImageFiles([]);
     }
   }, [editingSlider]);
 
@@ -959,7 +962,7 @@ export default function AdminDashboard() {
                       </div>
 
                       {/* Action Buttons */}
-                      <div className="grid grid-cols-3 gap-2">
+                      <div className="grid grid-cols-4 gap-2">
                         <Button
                           size="sm"
                           onClick={() => handleEdit(property)}
@@ -976,12 +979,23 @@ export default function AdminDashboard() {
                             location: property.location,
                             bedrooms: property.bedrooms,
                             bathrooms: property.bathrooms,
-                            size: property.size
+                            size: property.size,
+                            id: property.id
                           })}
                           className="border-green-500 text-green-600 hover:bg-green-500 hover:text-white"
                         >
                           <i className="fab fa-whatsapp text-sm mr-1"></i>
                           Chat
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => window.open('tel:+251975666699')}
+                          className="border-blue-500 text-blue-600 hover:bg-blue-500 hover:text-white"
+                          data-testid={`button-call-admin-${property.id}`}
+                        >
+                          <i className="fas fa-phone text-sm mr-1"></i>
+                          Call
                         </Button>
                         <Button
                           size="sm"

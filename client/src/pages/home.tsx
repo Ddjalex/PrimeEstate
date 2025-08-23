@@ -470,7 +470,8 @@ export default function Home() {
                           location: property.location,
                           bedrooms: property.beds,
                           bathrooms: property.baths,
-                          size: property.size
+                          size: property.size,
+                          id: "sample-property-id"
                         })}
                         data-testid={`property-whatsapp-${index}`}
                       >
