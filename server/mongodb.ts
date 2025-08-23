@@ -57,13 +57,23 @@ const whatsappSettingsSchema = new mongoose.Schema({
 
 // Auto-increment plugin for IDs
 function autoIncrement(schema: mongoose.Schema, options: { field: string; start?: number }) {
-  schema.add({ [options.field]: { type: Number, unique: true } });
+  schema.add({ [options.field]: { type: Number, unique: true, sparse: true } });
   
   schema.pre('save', async function(next) {
-    if (this.isNew) {
-      const Model = this.constructor as mongoose.Model<any>;
-      const lastDoc = await Model.findOne({}, {}, { sort: { [options.field]: -1 } });
-      this[options.field] = lastDoc ? lastDoc[options.field] + 1 : (options.start || 1);
+    if (this.isNew && !this[options.field]) {
+      try {
+        const Model = this.constructor as mongoose.Model<any>;
+        const lastDoc = await Model.findOne(
+          { [options.field]: { $exists: true, $ne: null } }, 
+          {}, 
+          { sort: { [options.field]: -1 } }
+        );
+        this[options.field] = lastDoc ? lastDoc[options.field] + 1 : (options.start || 1);
+      } catch (error) {
+        console.error('Error in auto-increment:', error);
+        // Fallback to timestamp-based ID
+        this[options.field] = Date.now() % 1000000;
+      }
     }
     next();
   });
