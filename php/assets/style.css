@@ -1,0 +1,50 @@
+:root {
+  --font-heading: 'Georgia', serif;
+  --font-body: 'Arial', sans-serif;
+  --space-base: 1rem;
+  --color-primary: #0055aa;
+  --color-primary-text: #ffffff;
+}
+
+body {
+  font-family: var(--font-body);
+  margin: var(--space-base);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  margin-bottom: calc(var(--space-base) / 2);
+}
+
+p {
+  margin-bottom: var(--space-base);
+}
+
+button {
+  font-family: var(--font-body);
+  padding: calc(var(--space-base) / 2) var(--space-base);
+  background-color: var(--color-primary);
+  color: var(--color-primary-text);
+  border: none;
+  cursor: pointer;
+}
+
+.hero {
+  position: relative;
+}
+.hero img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.hero .text-on-image {
+  position: absolute;
+  bottom: var(--space-base);
+  left: var(--space-base);
+}
+
+.text-on-image {
+  background-color: rgba(0, 0, 0, 0.6);
+  color: #ffffff;
+  padding: var(--space-base);
+}
