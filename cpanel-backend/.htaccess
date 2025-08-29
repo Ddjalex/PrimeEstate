@@ -1,0 +1,18 @@
+RewriteEngine On
+
+# Handle Node.js backend API routes
+RewriteCond %{REQUEST_URI} ^/api/.*
+RewriteRule ^(.*)$ index.js [L]
+
+# Allow static file uploads
+RewriteCond %{REQUEST_URI} ^/uploads/.*
+RewriteRule ^(.*)$ - [L]
+
+# Enable CORS headers
+Header always set Access-Control-Allow-Origin "*"
+Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+
+# Handle preflight OPTIONS requests
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ - [R=200,L]
