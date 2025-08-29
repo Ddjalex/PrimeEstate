@@ -281,14 +281,7 @@ export function HomePage({ propertyId }: HomePageProps = {}) {
                         {formatPrice(property.size || 0)}
                       </div>
                     </div>
-                    <div className="grid grid-cols-3 gap-2">
-                      <Button 
-                        className="bg-temer-green hover:bg-temer-dark-green text-white font-semibold" 
-                        data-testid={`button-view-${property.id}`}
-                        onClick={() => setSelectedProperty(property)}
-                      >
-                        View Details
-                      </Button>
+                    <div className="grid grid-cols-2 gap-2">
                       <Button 
                         variant="outline" 
                         className="border-green-500 text-green-600 hover:bg-green-500 hover:text-white font-semibold"
