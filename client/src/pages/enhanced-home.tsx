@@ -322,11 +322,6 @@ export function HomePage({ propertyId }: HomePageProps = {}) {
             </Card>
           )}
 
-          <div className="text-center mt-12">
-            <Button variant="outline" size="lg" className="border-temer-green text-temer-green hover:bg-temer-green hover:text-white font-semibold">
-              View All Properties
-            </Button>
-          </div>
         </div>
       </section>
 
