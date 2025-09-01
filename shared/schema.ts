@@ -92,7 +92,22 @@ export const insertContactSettingsSchema = createInsertSchema(contactSettings).o
   updatedAt: true,
 });
 
-// Contact Messages Schema
+// Slider Images table
+export const sliderImages = pgTable("slider_images", {
+  id: serial("id").primaryKey(),
+  imageUrl: text("image_url").notNull(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  isActive: boolean("is_active").default(true).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const insertSliderImageSchema = createInsertSchema(sliderImages).omit({
+  id: true,
+  createdAt: true,
+});
+
+// Contact Messages Schema  
 export const contactMessages = {
   id: 0,
   name: '',
@@ -121,5 +136,7 @@ export type WhatsAppSettings = Omit<typeof whatsappSettings.$inferSelect, 'id'> 
 export type InsertWhatsAppSettings = z.infer<typeof insertWhatsAppSettingsSchema>;
 export type ContactSettings = Omit<typeof contactSettings.$inferSelect, 'id'> & { id: string };
 export type InsertContactSettings = z.infer<typeof insertContactSettingsSchema>;
+export type SliderImage = Omit<typeof sliderImages.$inferSelect, 'id'> & { id: string };
+export type InsertSliderImage = z.infer<typeof insertSliderImageSchema>;
 export type ContactMessage = typeof contactMessages & { id: string };
 export type InsertContactMessage = z.infer<typeof insertContactMessageSchema>;
