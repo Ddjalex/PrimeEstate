@@ -1,8 +1,12 @@
 #!/usr/bin/env node
 
-const mongoose = require('mongoose');
-const fs = require('fs');
-const path = require('path');
+import mongoose from 'mongoose';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Original and new database connection strings
 const OLD_DB_URL = 'mongodb+srv://almeseged:A1l2m3e4s5@cluster0.t6sz6bo.mongodb.net/temer-properties?retryWrites=true&w=majority&appName=Cluster0';
@@ -277,11 +281,9 @@ async function main() {
   }
 }
 
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   main().catch(error => {
     console.error('💥 Migration failed:', error.message);
     process.exit(1);
   });
 }
-
-module.exports = { exportData, importData, validateMigration };
