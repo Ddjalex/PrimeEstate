@@ -10,7 +10,7 @@ The project serves as a modern real estate showcase with sections for property s
 - ✅ **PHP BACKEND COMPLETE**: All API endpoints converted to PHP for cPanel compatibility
 - ✅ **DEPLOYMENT PACKAGE**: Ready-to-upload cpanel-deployment-package.tar.gz created
 - ✅ **DUAL DATABASE SUPPORT**: MongoDB for Replit development, MySQL for production cPanel hosting
-- ✅ **PERSISTENT DATA STORAGE**: All property and user data now saved to cloud database: mongodb+srv://almeseged:A1l2m3e4s5@cluster0.t6sz6bo.mongodb.net/temer-properties
+- ✅ **PERSISTENT DATA STORAGE**: All property and user data now saved to cloud database: mongodb+srv://almeseged:A1l2m3e4s5@jerry.viif47d.mongodb.net/temer-properties
 - ✅ **PROFESSIONAL WEBSITE ENHANCEMENT**: Created stunning homepage with dynamic image slider
 - ✅ **HERO SLIDER FUNCTIONALITY**: Implemented professional image slider with auto-play, controls, and indicators
 - ✅ **ADMIN SLIDER MANAGEMENT**: Added complete slider management system in admin dashboard

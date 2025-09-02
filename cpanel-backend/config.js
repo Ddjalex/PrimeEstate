@@ -1,7 +1,7 @@
 // cPanel Environment Configuration
 export const config = {
   // MongoDB connection - Update with your MongoDB Atlas connection string
-  MONGODB_URI: process.env.MONGODB_URI || 'mongodb+srv://almeseged:A1l2m3e4s5@cluster0.t6sz6bo.mongodb.net/temer-properties',
+  MONGODB_URI: process.env.MONGODB_URI || 'mongodb+srv://almeseged:A1l2m3e4s5@jerry.viif47d.mongodb.net/temer-properties',
   
   // Server configuration
   PORT: process.env.PORT || 3000,

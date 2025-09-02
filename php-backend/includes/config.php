@@ -4,7 +4,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 // Database Configuration
-define('MONGODB_URI', 'mongodb+srv://almeseged:A1l2m3e4s5@cluster0.t6sz6bo.mongodb.net/temer-properties');
+define('MONGODB_URI', 'mongodb+srv://almeseged:A1l2m3e4s5@jerry.viif47d.mongodb.net/temer-properties');
 define('DB_NAME', 'temer-properties');
 
 // File Upload Configuration
