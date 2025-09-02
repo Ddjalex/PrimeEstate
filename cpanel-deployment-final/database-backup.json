@@ -1,0 +1,163 @@
+{
+  "users": [
+    {
+      "_id": "68a84c985765c80e662a0b34",
+      "username": "admin",
+      "password": "$2b$10$Oo9Iy2TkOWJLAcCxt5lrue3Z8nHKB5MrhwzgRA3KPTsNQIMz1HjHe",
+      "isAdmin": true,
+      "createdAt": "2025-08-22T10:55:20.311Z",
+      "id": 1,
+      "__v": 0
+    }
+  ],
+  "properties": [
+    {
+      "_id": "68a84c985765c80e662a0b2f",
+      "title": "Luxury 3-Bedroom Apartment in Bole",
+      "description": "Beautiful modern apartment with stunning city views, fully furnished with high-end finishes. Located in the heart of Bole, close to shopping centers and restaurants.",
+      "location": "Bole, Addis Ababa",
+      "propertyType": "apartment",
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "size": 150,
+      "status": [
+        "For Sale",
+        "Active"
+      ],
+      "imageUrls": [
+        "/uploads/properties/image-1755862923825-317432158.png"
+      ],
+      "isActive": true,
+      "createdAt": "2025-08-15T00:00:00.000Z",
+      "updatedAt": "2025-08-22T11:42:22.690Z",
+      "__v": 0
+    },
+    {
+      "_id": "68a999252e55422e34fbc7ff",
+      "title": "wef",
+      "description": "wfscxz",
+      "location": "Piassa,Addis Ababa",
+      "propertyType": "apartment",
+      "bedrooms": 3,
+      "bathrooms": 1,
+      "size": 124,
+      "status": [
+        "For Sale",
+        "Active"
+      ],
+      "imageUrls": [
+        "/uploads/properties/image-1755945244434-682726946.png"
+      ],
+      "isActive": true,
+      "createdAt": "2025-08-23T10:34:13.417Z",
+      "updatedAt": "2025-08-23T10:34:33.877Z",
+      "id": 1,
+      "__v": 0
+    }
+  ],
+  "sliderImages": [
+    {
+      "_id": "68a84cd20af0afa642d45f08",
+      "imageUrl": "/uploads/slider/image-1755935977423-455471643.jpg",
+      "title": "Modern Living Spaces",
+      "description": "Experience contemporary design and luxury amenities",
+      "isActive": true,
+      "createdAt": "2025-08-22T10:56:18.646Z",
+      "id": 2,
+      "__v": 0
+    },
+    {
+      "_id": "68a84cd20af0afa642d45f0b",
+      "imageUrl": "/uploads/slider/image-1755935993750-98203365.jpg",
+      "title": "Investment Opportunities",
+      "description": "Secure your future with our premium property portfolio",
+      "isActive": true,
+      "createdAt": "2025-08-22T10:56:18.853Z",
+      "id": 3,
+      "__v": 0
+    },
+    {
+      "_id": "68a96fff7ecaaeb632b6de17",
+      "imageUrl": "/uploads/slider/image-1755936007120-374755525.jpg",
+      "title": "Temer",
+      "description": "Properties",
+      "isActive": true,
+      "createdAt": "2025-08-23T07:38:39.248Z",
+      "id": 4,
+      "__v": 0
+    },
+    {
+      "_id": "68a9754264133315c2e89fcb",
+      "imageUrl": "/uploads/slider/image-1755936043542-385197895.jpg",
+      "title": "Temer Pro",
+      "description": "Coming soon",
+      "isActive": true,
+      "createdAt": "2025-08-23T08:01:06.957Z",
+      "id": 5,
+      "__v": 0
+    },
+    {
+      "_id": "68a9756a64133315c2e89fd6",
+      "imageUrl": "/uploads/slider/image-1755936102702-444924509.jpg",
+      "title": "Investment Opportunities",
+      "description": "Are you ready",
+      "isActive": true,
+      "createdAt": "2025-08-23T08:01:46.961Z",
+      "id": 6,
+      "__v": 0
+    }
+  ],
+  "whatsappSettings": [
+    {
+      "_id": "68a961f714b44224e9cbaca9",
+      "phoneNumber": "+251974408281",
+      "isActive": true,
+      "businessName": "Temer Properties",
+      "welcomeMessage": "Hello! Welcome to Temer Properties. How can we assist you today?",
+      "propertyInquiryTemplate": "Hello! I'm interested in this property:\n\n🏠 *{title}*\n📍 Location: {location}\n🛏️ Bedrooms: {bedrooms}\n🚿 Bathrooms: {bathrooms}\n📐 Size: {size} m²\n\nCould you please provide more information about this property? I would like to schedule a viewing or discuss the details further.\n\nThank you!",
+      "generalInquiryTemplate": "Hello Temer Properties! 👋\n\nI'm interested in learning more about your real estate services. Could you please help me with information about available properties?\n\nThank you!",
+      "createdAt": "2025-08-23T06:38:47.388Z",
+      "updatedAt": "2025-08-23T06:45:03.925Z",
+      "id": 1,
+      "__v": 0
+    }
+  ],
+  "contactSettings": [
+    {
+      "_id": "68a976978d45237b33fa95d9",
+      "phone": "+251 974408281",
+      "email": "almesegedw@gmail.com",
+      "address": "Bole Road, Addis Ababa, Ethiopia",
+      "isActive": true,
+      "createdAt": "2025-08-23T08:06:47.252Z",
+      "updatedAt": "2025-08-23T08:22:00.191Z",
+      "id": 1,
+      "__v": 0
+    }
+  ],
+  "contactMessages": [
+    {
+      "_id": "68a9988faaf584dc1734539c",
+      "name": "almeseged",
+      "email": "almesegedw@gmail.com",
+      "phone": "0911004034",
+      "message": "rgfs",
+      "isRead": false,
+      "createdAt": "2025-08-23T10:31:43.760Z",
+      "id": 1,
+      "__v": 0
+    },
+    {
+      "_id": "68a99a8871eca28881696c69",
+      "name": "almeseged",
+      "email": "almesegedw@gmail.com",
+      "phone": "0911004034",
+      "message": "hi",
+      "isRead": false,
+      "createdAt": "2025-08-23T10:40:08.710Z",
+      "id": 2,
+      "__v": 0
+    }
+  ],
+  "exportDate": "2025-09-02T12:58:54.567Z"
+}
